@@ -1,0 +1,36 @@
+<div class="caja1">
+
+
+    <p class="texto1">Sr. Usuario, enviaremos un código de confirmación de <br> identidad, por favor indicanos porque medio deseas recibirlo </p>
+
+    <div class="caja2">
+  <div>
+    <div class="text2">
+      <label class="switch">
+          <input type="checkbox" type="checkbox" role="switch" name="flexRadioDefault" id="flexSwitchCheckDefault" (change)="switchChange(tel)">
+          <span class="slider round"></span>
+          </label>
+        </div>
+      <label class="form-check-label" for="flexSwitchCheckDefault">{{tel}}</label>
+  </div>
+
+
+
+  <hr class="linea">
+
+
+  <div>
+    <div class="text1">
+      <label class="switch">
+        <input type="checkbox" type="checkbox" role="switch" name="flexRadioDefault" id="flexSwitchCheckDefault" (change)="switchChange(email)">
+        <span class="slider round"></span>
+      </label>
+      </div>
+          <label class="form-check-label1" for="flexSwitchCheckDefault">{{email}}</label>
+
+        </div>
+      <div class="ones">
+        <button type="button" class="btn2" routerLink="/code">Enviar</button>
+      </div>
+  </div>
+</div>

@@ -1,0 +1,146 @@
+.font-family1{
+text-align: center;
+font: normal normal normal 18px/20px Roboto;
+letter-spacing: 0px;
+color: #464646;
+opacity: 1;
+  }
+
+
+.form-check-label{
+  position: relative;
+
+  margin-left:725px ;
+  margin-top: 75px;
+text-align: left;
+font: normal normal normal 20px/20px Roboto;
+letter-spacing: -0.66px;
+color: #464646;
+opacity: 1;
+}
+
+.form-check-label1{
+  position: relative;
+  bottom:  110px;
+
+  margin-left:730px ;
+  margin-top: 70px;
+text-align: left;
+font: normal normal normal 20px/20px Roboto;
+letter-spacing: -0.66px;
+color: #464646;
+opacity: 1;
+}
+
+
+.linea{
+  position: relative;
+  top:25px;
+  width: 400px;
+  margin-left: 650px;
+}
+
+.switchBtn {
+  position: relative;
+  display: inline-block;
+  width: 110px;
+  height: 34px;
+}
+.switchBtn input {display:none;}
+.slide {
+  cursor: pointer;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+  padding: 8px;
+  color: #fff;
+}
+
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+  margin-left: 640px;
+  margin-top:50px;
+
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  cursor: pointer;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: #E6E6E6;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider:before {
+  background-color: #D8291D;
+}
+
+input:focus + .slider:before {
+  box-shadow: 0 0 1px #D8291D;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+  box-shadow: 0 0 1px #D8291D;
+
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+.text1{
+  position: relative;
+  bottom: 10px;
+}
+
+.text2{
+  position: relative;
+  top: 110px;
+}
+
+.caja2{
+position: relative;
+bottom: 100px;
+}
+
+.ones{
+  position: relative;
+  bottom: 90px;
+}

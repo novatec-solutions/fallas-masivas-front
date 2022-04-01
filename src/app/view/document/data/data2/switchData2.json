@@ -1,0 +1,25 @@
+[{
+  "documento":[{
+
+    "cod":"1026305104"
+
+    ,
+     "cod": "1026305174"
+      }
+  ],
+
+  "nombre":"Cristian Pardo",
+  "telefono":"3217633897",
+  "email":"pardoc99@gmail.com"},
+
+  {"documento":"1026305105",
+    "nombre":"Cristian Parra",
+    "telefono":"3217637575",
+    "email":"pandre99@gmail.com"},
+
+{"documento":"1026305106",
+      "nombre":"Cristian Prado",
+      "telefono":"3217633899",
+      "email":"porroc99@gmail.com"}
+
+  ]
