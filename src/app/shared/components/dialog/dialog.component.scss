@@ -1,0 +1,26 @@
+.mat-dialog-actions {
+  margin-bottom: 0;
+  padding: 0;
+  min-height: 0;
+  margin-top: 15px;
+  display: flex;
+  justify-content: space-between;
+  button {
+    width: 48%;
+  }
+}
+
+::ng-deep {
+  .mat-dialog-container {
+    padding: 50px 24px;
+    text-align: center;
+    .mat-dialog-content {
+      padding: 0 70px 20px 70px;
+      text-align: center;
+      label {
+        color: #464646;
+        font-size: 12px;
+      }
+    }
+  }
+}

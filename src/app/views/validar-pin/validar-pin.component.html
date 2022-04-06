@@ -1,0 +1,16 @@
+<div class="box">
+  <label class="title">Ingresa tu código de verificación recuerda que estará disponible por 15 minutos</label>
+  <form [formGroup]="pinForm" (ngSubmit)="validatePin()" novalidate>
+    <div class="input-box">
+      <input type="number" formControlName="pin1" class="mr20" onkeyup="if(this.value.length==1) num2.focus();"/>
+      <input type="number" id="num2" formControlName="pin2" class="mr20" onkeyup="if(this.value.length==1) num3.focus();"/>
+      <input type="number" id="num3" formControlName="pin3" class="mr20" onkeyup="if(this.value.length==1) num4.focus();"/>
+      <input type="number" id="num4" formControlName="pin4" onKeyDown="if(this.value.length==1) return false;"/>
+    </div>
+    <div class="btn-content mb50">
+      <button class="btn bg-red">Continuar</button>
+    </div>
+  </form>
+  <label class="title">Si tu código no ha llegado solicítalo de nuevo</label>
+  <button class="btn bg-red" (click)="generatePinAgain()">Solicitar Código</button>
+</div>

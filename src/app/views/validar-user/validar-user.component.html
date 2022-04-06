@@ -1,0 +1,27 @@
+<div class="box">
+  <label class="title">{{title}}</label>
+  <form [formGroup]="validateForm" (ngSubmit)="validateUser()" novalidate *ngIf="!contact">
+      <label class="subtitle">Tipo de documento</label>
+      <select formControlName="documentType" class="mb40">
+        <option value="" selected>Selecciona</option>
+        <option value="CC">CC</option>
+        <option value="CE">CE</option>
+    </select>
+      <label class="subtitle">Número de documento</label>
+      <input type="number" formControlName="documentNumber"/>
+    <div class="mt50 btn-box">
+      <button class="btn bg-gray">Cancelar</button>
+      <button class="btn bg-red">Continuar</button>
+    </div>
+  </form>
+
+  <div *ngIf="contact" class="contact-box">
+    <mat-list class="list-contact mb50">
+      <mat-list-item *ngFor="let data of contactData; let ultimo=last">
+        <mat-slide-toggle [checked]="data.check" (change)="contactSelection(data)"><label class="slide-text">{{data.mask}}</label></mat-slide-toggle>
+        <mat-divider *ngIf="!ultimo"></mat-divider>
+      </mat-list-item>
+    </mat-list>
+    <button class="btn bg-red" (click)="generatePin()">Enviar</button>
+  </div>
+</div>

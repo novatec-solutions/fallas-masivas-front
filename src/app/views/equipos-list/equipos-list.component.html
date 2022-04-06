@@ -1,0 +1,25 @@
+<div class="box">
+  <label class="title">Confírmanos dónde se encuentra el equipo que escaneaste</label>
+  <div class="list-content">
+    <table mat-table [dataSource]="dataSource">
+      <ng-container matColumnDef="slide">
+        <th mat-header-cell *matHeaderCellDef> </th>
+        <td mat-cell *matCellDef="let element"><mat-slide-toggle></mat-slide-toggle></td>
+      </ng-container>
+      <ng-container matColumnDef="cuenta">
+        <th mat-header-cell *matHeaderCellDef> Cuenta </th>
+        <td mat-cell *matCellDef="let element"> {{element.cuenta}} </td>
+      </ng-container>
+      <ng-container matColumnDef="direccion">
+        <th mat-header-cell *matHeaderCellDef> Dirección </th>
+        <td mat-cell *matCellDef="let element"> {{element.direccion}} </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <div class="mt50 btn-box">
+      <button class="btn bg-gray">Cancelar</button>
+      <button class="btn bg-red">Continuar</button>
+    </div>
+  </div>
+</div>
