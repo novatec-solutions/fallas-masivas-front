@@ -72,9 +72,11 @@ export class ValidarUserComponent implements OnInit {
 
     const param = {
       "documentClient" : localStorage.getItem('document'),
-      "contactData" : seleccion.contact,
-      "contactType" : seleccion.type
+      "contactData" : "3134933777",
+      "contactType" : "4"
     };
+
+    console.log("param:: ", param)
 
     this.VerifyClientService.generar_pin(param).subscribe(res => {
       this.router.navigate(['/pin']);
