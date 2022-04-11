@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { VerifyClientService } from '../../shared/services/verify-client.service';
 import { DialogComponent } from '../../shared/components/dialog/dialog.component';
+import { getValue } from 'src/app/shared/Enums/document-type.enum';
 
 @Component({
   selector: 'app-equipos-list',
@@ -20,9 +21,10 @@ export class EquiposListComponent implements OnInit {
   }
 
   consultar_datos(){
+    const [tipo, documento] = localStorage.getItem('document')?.split("-") || [];
     const param = {
-      "documentNumber": "55978771",
-      "documentType": "1" //?
+      "documentNumber": documento,
+      "documentType": getValue(tipo).id
     };
 
     this.VerifyClientService.consultar_datos(param).subscribe(res => {

@@ -31,15 +31,16 @@ export class ValidarPinComponent implements OnInit {
 
   validatePin(){
     const form = this.pinForm.value;
-    const pinNumber = form.pin1+form.pin2+form.pin3+form.pin4;
+    const pinNumber = `${form.pin1}${form.pin2}${form.pin3}${form.pin4}`;
+    
     const param = {
-      "documentClient": "CC-1010180007",//localStorage.getItem('document')
-      "pinNumber": "823902" //pinNumber
+      "documentClient": localStorage.getItem('document'),
+      "pinNumber": pinNumber
     };
 
-    this.VerifyClientService.validar_cuenta(param).subscribe(res => {
+    this.VerifyClientService.validar_pin(param).subscribe(res => {
       if(res.error > 0){
-        const data = {text: "Señor Usuario el Código que ingreso es incorrecto por favor valide nuevamente",
+        const data = {text: res.response.description,
               grayBtn: "Volver", redBtn: "Finalizar"};
         this.showMessage(data);
       }else{
@@ -49,14 +50,19 @@ export class ValidarPinComponent implements OnInit {
   }
 
   generatePinAgain(){
-    const contact = localStorage.getItem('contact');
+    const contact = localStorage.getItem('contact') as any;
     const param = {
-      "documentClient" : "CC-1010180007",//localStorage.getItem('document')
-      "contactData" : "3115737115", //contact.contact
-      "contactType" : "4" //contact.type
+      "documentClient" : localStorage.getItem('document'),
+      "contactData" : contact.contact,
+      "contactType" : contact.type
     };
 
     this.VerifyClientService.generar_pin(param).subscribe(res => {
+      if(res.error == 0){
+        const data = {text: "Pin Generado satisfactoriamente",
+              grayBtn: "Volver", redBtn: "Aceptar"};
+        this.showMessage(data);
+      }
       this.setTimeout();
     });
   }

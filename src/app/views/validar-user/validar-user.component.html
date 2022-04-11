@@ -4,8 +4,9 @@
       <label class="subtitle">Tipo de documento</label>
       <select formControlName="documentType" class="mb40">
         <option value="" selected>Selecciona</option>
-        <option value="CC">CC</option>
-        <option value="CE">CE</option>
+        <ng-container *ngFor="let tipo of tiposDocumentosLlave">
+          <option value="{{getValue(tipo).code}}">{{getValue(tipo).label}}</option>
+        </ng-container>
     </select>
       <label class="subtitle">Número de documento</label>
       <input type="number" formControlName="documentNumber"/>

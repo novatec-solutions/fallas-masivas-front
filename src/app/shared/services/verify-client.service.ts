@@ -19,7 +19,7 @@ export class VerifyClientService {
   }
 
   generar_pin(data:any): Observable<any> {
-    const url = this.baseUrl + "generar/pin";
+    const url = this.baseUrl + "validar/generar/pin";
     return this.http.post<any>(url, data);
   }
 
@@ -29,7 +29,7 @@ export class VerifyClientService {
   }
 
   consultar_datos(data:any): Observable<any> {
-    const url = this.baseUrl + "consultar/datos";
+    const url = this.baseUrl + "validar/consultar/datos";
     return this.http.post<any>(url, data);
   }
 }

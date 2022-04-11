@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { getValue, TIPOS_DOCUMENTOS } from 'src/app/shared/Enums/document-type.enum';
 import { DialogComponent } from '../../shared/components/dialog/dialog.component';
 import { VerifyClientService } from '../../shared/services/verify-client.service';
 
@@ -13,6 +14,7 @@ import { VerifyClientService } from '../../shared/services/verify-client.service
 export class ValidarUserComponent implements OnInit {
   validateForm!: FormGroup;
   title!: string;
+  tiposDocumentosLlave = Object.keys(TIPOS_DOCUMENTOS);
   contactData: { type: string; contact: string; mask: string; check: boolean }[] = [];
   contact: boolean = false;
 
@@ -34,7 +36,7 @@ export class ValidarUserComponent implements OnInit {
     const form = this.validateForm.value;
     localStorage.setItem('document', `${form.documentType}-${form.documentNumber}`);
     const param = {
-      documentClient :  "CC-80795939" //`${form.documentType}-${form.documentNumber}`
+      documentClient : `${form.documentType}-${form.documentNumber}`
     };
 
     this.VerifyClientService.validar_cuenta(param).subscribe(res => {
@@ -51,7 +53,7 @@ export class ValidarUserComponent implements OnInit {
         this.title = "Sr Usuario enviaremos un código de confirmación de identidad, por favor indicanos por que medio desea recibirlo";
 
         res.response.forEach( (elem: { type: string; contact: string; mask: string; check: boolean }) => {
-            let mask = elem.type == "1" ? this.telephoneMask(elem.contact) : this.emailMask(elem.contact);
+            let mask = elem.type == "4" ? this.telephoneMask(elem.contact) : this.emailMask(elem.contact);
             elem.mask = mask;
             elem.check = false;
             this.contactData.push(elem);
@@ -60,14 +62,18 @@ export class ValidarUserComponent implements OnInit {
     });
   }
 
+  getValue(tipo: string){
+    return getValue(tipo);
+  }
+
   generatePin(){
-    const seleccion = this.contactData.filter(item => { return (item.check == true) });
-    localStorage.setItem('contact', JSON.stringify(seleccion[0]));
+    const [seleccion] = this.contactData.filter(item => { return (item.check == true) });
+    localStorage.setItem('contact', JSON.stringify(seleccion));
 
     const param = {
-      "documentClient" : "CC-1010180007",//localStorage.getItem('document')
-      "contactData" : "3115737115", //seleccion[0].contact
-      "contactType" : "4" //seleccion[0].type
+      "documentClient" : localStorage.getItem('document'),
+      "contactData" : seleccion.contact,
+      "contactType" : seleccion.type
     };
 
     this.VerifyClientService.generar_pin(param).subscribe(res => {
