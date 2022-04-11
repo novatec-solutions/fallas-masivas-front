@@ -50,7 +50,7 @@ export class ValidarPinComponent implements OnInit {
   }
 
   generatePinAgain(){
-    const contact = localStorage.getItem('contact') as any;
+    const contact = JSON.parse(localStorage.getItem('contact') as any);
     const param = {
       "documentClient" : localStorage.getItem('document'),
       "contactData" : contact.contact,

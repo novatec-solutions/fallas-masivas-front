@@ -70,16 +70,10 @@ export class ValidarUserComponent implements OnInit {
     const [seleccion] = this.contactData.filter(item => { return (item.check == true) });
     localStorage.setItem('contact', JSON.stringify(seleccion));
 
-    // const param = {
-    //   "documentClient" : localStorage.getItem('document'),
-    //   "contactData" : seleccion.contact,
-    //   "contactType" : seleccion.type
-    // };
-
     const param = {
       "documentClient" : localStorage.getItem('document'),
-      "contactData" : "3102383099",
-      "contactType" : "4"
+      "contactData" : seleccion.contact,
+      "contactType" : seleccion.type
     };
 
     this.VerifyClientService.generar_pin(param).subscribe(res => {
