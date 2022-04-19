@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { VerifyClientService } from '../../shared/services/verify-client.service';
 import { DialogComponent } from '../../shared/components/dialog/dialog.component';
 import { getValue } from 'src/app/shared/Enums/document-type.enum';
+import { DataOperationService } from '../../shared/services/data-operation.service';
 
 @Component({
   selector: 'app-equipos-list',
@@ -11,10 +12,11 @@ import { getValue } from 'src/app/shared/Enums/document-type.enum';
 })
 export class EquiposListComponent implements OnInit {
   displayedColumns: string[] = ['slide', 'cuenta', 'direccion'];
-  dataSource = [];
+  dataSource: any = [];
 
   constructor(private VerifyClientService: VerifyClientService,
-    public dialog: MatDialog) { }
+    public dialog: MatDialog,
+    private DataOperationService: DataOperationService) { }
 
   ngOnInit(): void {
     this.consultar_datos();
@@ -36,7 +38,13 @@ export class EquiposListComponent implements OnInit {
         });
         dialogRef.afterClosed();
       }else{
-        this.dataSource = res.response;
+        let dataArr: { cuenta: string; direccion: string; mask: string; }[] = [];
+        res.response.map( (elem: { cuenta: string; direccion: string; mask: string; }) => {
+          let mask =  this.DataOperationService.contactMask(elem.direccion, 5);
+          elem.mask = mask;
+          dataArr.push(elem);
+        });
+        this.dataSource = dataArr;
       }
     });
   }

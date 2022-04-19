@@ -16,7 +16,7 @@ export class ValidarPinComponent implements OnInit {
   constructor(public fb: FormBuilder,
     private router: Router,
     public dialog: MatDialog,
-    private VerifyClientService: VerifyClientService) {
+    private VerifyClientService: VerifyClientService,) {
     this.pinForm = this.fb.group({
       pin1: ['', [Validators.required]],
       pin2: ['', [Validators.required]],
@@ -25,9 +25,7 @@ export class ValidarPinComponent implements OnInit {
       });
   }
 
-  ngOnInit(): void {
-    this.setTimeout();
-  }
+  ngOnInit(): void {}
 
   validatePin(){
     const form = this.pinForm.value;
@@ -63,16 +61,7 @@ export class ValidarPinComponent implements OnInit {
               grayBtn: "Volver", redBtn: "Aceptar"};
         this.showMessage(data);
       }
-      this.setTimeout();
     });
-  }
-
-  setTimeout(){
-    setTimeout(() =>{
-      const data = {text: "Señor Usuario el Código que ingreso ha superado el tiempo máximo de activación",
-              grayBtn: "Generar código", redBtn: "Finalizar"};
-      this.showMessage(data);
-    }, 900000);
   }
 
   showMessage(info: any){

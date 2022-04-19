@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { getValue, TIPOS_DOCUMENTOS } from 'src/app/shared/Enums/document-type.enum';
 import { DialogComponent } from '../../shared/components/dialog/dialog.component';
 import { VerifyClientService } from '../../shared/services/verify-client.service';
+import { DataOperationService } from '../../shared/services/data-operation.service';
 
 @Component({
   selector: 'app-validar-user',
@@ -21,7 +22,8 @@ export class ValidarUserComponent implements OnInit {
   constructor(public fb: FormBuilder,
     private router: Router,
     public dialog: MatDialog,
-    private VerifyClientService: VerifyClientService) {
+    private VerifyClientService: VerifyClientService,
+    private DataOperationService: DataOperationService) {
     this.validateForm = this.fb.group({
       documentType: ['', [Validators.required]],
       documentNumber: ['', [Validators.required]]
@@ -52,8 +54,8 @@ export class ValidarUserComponent implements OnInit {
         this.contact = true;
         this.title = "Sr Usuario enviaremos un código de confirmación de identidad, por favor indicanos por que medio desea recibirlo";
 
-        res.response.forEach( (elem: { type: string; contact: string; mask: string; check: boolean }) => {
-            let mask = elem.type == "4" ? this.telephoneMask(elem.contact) : this.emailMask(elem.contact);
+        res.response.map( (elem: { type: string; contact: string; mask: string; check: boolean }) => {
+            let mask = elem.type == "4" ? this.DataOperationService.contactMask(elem.contact, 6) : this.DataOperationService.emailMask(elem.contact);
             elem.mask = mask;
             elem.check = false;
             this.contactData.push(elem);
@@ -72,11 +74,9 @@ export class ValidarUserComponent implements OnInit {
 
     const param = {
       "documentClient" : localStorage.getItem('document'),
-      "contactData" : "3134933777",
+      "contactData" : "3102383099",
       "contactType" : "4"
     };
-
-    console.log("param:: ", param)
 
     this.VerifyClientService.generar_pin(param).subscribe(res => {
       this.router.navigate(['/pin']);
@@ -84,17 +84,8 @@ export class ValidarUserComponent implements OnInit {
   }
 
   contactSelection(info: any){
-    this.contactData.filter(opt => { opt.check = (opt != info) ? false : true;});
+    this.contactData.forEach(opt => { opt.check = (opt != info) ? false : true;});
   }
 
-  telephoneMask (telephone: string) {
-    return telephone.substring(0,6) + "*".repeat(4);
-  }
-
-  emailMask (email: string) {
-    let arr = email.split("@");
-    let inicio = arr[0];
-    let fin = "*".repeat(arr[1].length);
-    return inicio + "*" + fin;
-  };
+  
 }
