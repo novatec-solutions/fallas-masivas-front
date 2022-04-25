@@ -17,9 +17,4 @@ export class AuthService {
     const url = this.baseUrl + "validar/cuenta";
     return this.http.post<any>(url, data);
   }
-
-  generar_pin(data:any): Observable<any> {
-    const url = this.baseUrl + "validar/generar/pin";
-    return this.http.post<any>(url, data);
-  }
 }

@@ -42,7 +42,7 @@ export class ValidateUserComponent implements OnInit {
       documentClient : `${form.documentType}-${form.documentNumber}`
     };
 
-    this.AuthService.validar_cuenta(param).subscribe((res: { error: number; response: { description: any; map: (arg0: (elem: { type: string; contact: string; mask: string;}) => void) => void; }; }) => {
+    this.AuthService.validar_cuenta(param).subscribe( res => {
       if(res.error > 0){
         this.contact = false;
         const dialogRef = this.dialog.open(MessagesComponent, {
@@ -57,7 +57,8 @@ export class ValidateUserComponent implements OnInit {
         this.title = "Los datos que registraste no se encuentran en nuestro sistema. Por favor verifica e intenta de nuevo";
         //Sr Usuario enviaremos un código de confirmación de identidad, por favor indicanos por que medio desea recibirlo
 
-        res.response.map( (elem: { type: string; contact: string; mask: string;}) => {
+        res.response.map((elem: { type: any; contact: any; mask: any; }) => {
+          console.log("map: ", elem)
             let mask = elem.type == "4" ? this.UtilsService.contactMask(elem.contact, 8) : this.UtilsService.contactMask(elem.contact, 3);
             elem.mask = mask;
             this.contactData.push(elem);
