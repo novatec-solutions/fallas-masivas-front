@@ -1,0 +1,61 @@
+@import "../../../../assets/theme/variables.scss";
+
+::ng-deep {
+  .mat-dialog-container {
+    padding: 10px 24px 24px;
+    .mat-dialog-content {
+      display: flex;
+      justify-content: space-around;
+      flex-direction: column;
+      align-items: flex-end;
+
+      .content-icon {
+        background: $red;
+        width: 20px;
+        height: 20px;
+        border-radius: 50px;
+        .mat-icon {
+          height: 15px;
+          width: 20px;
+        }
+        .icon-close {
+          color: $white;
+          font-size: 15px;
+          vertical-align: middle;
+          text-align: center;
+        }
+      }
+      .content {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        margin-bottom: 16px;
+        img {
+          margin-bottom: 10px;
+        }
+        label {
+          font-size: 13px;
+          text-align: center;
+          letter-spacing: 0px;
+          color: $black-text;
+          font-family: Roboto;
+        }
+      }
+    }
+  }
+  .mat-dialog-actions {
+    margin-bottom: 0;
+    padding: 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    .app-button {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+  }
+}

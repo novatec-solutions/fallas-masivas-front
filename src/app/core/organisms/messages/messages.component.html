@@ -1,0 +1,12 @@
+<mat-dialog-content>
+  <div class="content-icon"><mat-icon matSuffix class="icon-close" [mat-dialog-close]="null">close</mat-icon></div>
+  <div class="content">
+    <img src="assets/images/info.svg">
+    <label class="text-center"> {{data.text}}</label>
+  </div>
+
+</mat-dialog-content>
+<div mat-dialog-actions class="btn-box">
+  <app-button *ngIf="data.redText" [mat-dialog-close]="null" class="app-button" buttonClass="{{data.redClass}}">{{data.redText}}</app-button>
+  <app-button *ngIf="data.grayText" [mat-dialog-close]="null" class="app-button" buttonClass="{{data.grayClass}}">{{data.grayText}}</app-button>
+</div>

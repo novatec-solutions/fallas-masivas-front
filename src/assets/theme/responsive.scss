@@ -1,0 +1,24 @@
+@media screen and (min-width: 768px) {
+  .content {
+    width: 500px;
+    .btn-box {
+      flex-direction: row;
+      .app-button {
+        width: 48%;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .content {
+    width: 80%;
+    .btn-box {
+      flex-direction: column;
+      .app-button {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+    }
+  }
+}

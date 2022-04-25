@@ -1,19 +1,27 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { EquiposListComponent } from './views/equipos-list/equipos-list.component';
-import { ValidarPinComponent } from './views/validar-pin/validar-pin.component';
-import { ValidarUserComponent } from './views/validar-user/validar-user.component';
+import { Routes, RouterModule } from '@angular/router';
 
 const routes: Routes = [
-  { path: '', component: ValidarUserComponent },
-  { path: 'validar-user', component: ValidarUserComponent },
-  { path: 'pin', component: ValidarPinComponent },
-  { path: 'equipos', component: EquiposListComponent },
-  { path: '**', pathMatch: 'full', redirectTo: '/validar-user' }
+  {
+    path: '',
+    loadChildren: () =>
+      import('./modules/auth/auth.module').then((m) => m.AuthModule)
+  },
+  {
+    path: 'pin',
+    loadChildren: () =>
+      import('./modules/pin/pin.module').then((m) => m.PinModule),
+  },
+  {
+    path: 'cuenta',
+    loadChildren: () =>
+      import('./modules/account/account.module').then((m) => m.AccountModule),
+  },
+  { path: '**', pathMatch: 'full', redirectTo: '' }
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

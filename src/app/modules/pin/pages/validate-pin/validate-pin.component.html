@@ -1,0 +1,28 @@
+<div class="container">
+  <div class="text-box">
+    <p class="bold-title">Validar cuenta</p>
+    <p>Hemos enviado un PIN de cuatro (4) dígitos al número de celular</p>
+    <div class="red-box mt30">
+      <img src="assets/images/{{contact.type=='1'?'mail-red.svg':'tablet-red.svg'}}" />
+      <label class="red-label">{{contact.mask}}</label>
+    </div>
+  </div>
+  <form [formGroup]="pinForm" (ngSubmit)="validatePin()" novalidate class="content">
+    <p class="pin-text">PIN de seguridad</p>
+    <div class="input-box" max-length-group>
+      <input type="number" formControlName="pin1" class="mr20" #num1 maxlength="1"  [next]="num2" />
+      <input type="number" formControlName="pin2" class="mr20" #num2 maxlength="1" [prev]="num1" [next]="num3" />
+      <input type="number" formControlName="pin3" class="mr20" #num3 maxlength="1" [prev]="num2" [next]="num4" />
+      <input type="number" formControlName="pin4" #num4 [prev]="num3" maxlength="1" />
+    </div>
+    <div class="text-center">
+      <p class="text">¿No recibiste el PIN de seguridad?</p>
+      <label class="red-text" (click)="generatePin()">Reenviar
+        <div class="content-icon"><mat-icon matSuffix class="icon-chevron">chevron_right</mat-icon></div>
+      </label>
+    </div>
+    <div class="mt50">
+      <app-button class="app-button" buttonClass="{{pinForm.invalid?'btn bg-light-gray':'btn bg-red'}}" buttonDisabled="{{pinForm.invalid}}">Validar</app-button>
+    </div>
+  </form>
+</div>
