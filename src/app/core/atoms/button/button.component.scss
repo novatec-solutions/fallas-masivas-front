@@ -1,0 +1,28 @@
+@import "../../../../assets/theme/variables.scss";
+
+.btn {
+  border-radius: 26px;
+  color: $white;
+  border: none;
+  font-size: 13px;
+  cursor: pointer;
+  outline: none;
+  padding: 13px 20px;
+  width: 100%;
+}
+
+.bg-red {
+  background: $red;
+}
+
+.bg-gray {
+  background: $dark-gray;
+}
+
+.bg-light-gray {
+  background: $light-gray;
+}
+
+.bg-dark {
+  background: $black;
+}
