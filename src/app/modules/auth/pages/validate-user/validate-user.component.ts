@@ -58,7 +58,6 @@ export class ValidateUserComponent implements OnInit {
         //Sr Usuario enviaremos un código de confirmación de identidad, por favor indicanos por que medio desea recibirlo
 
         res.response.map((elem: { type: any; contact: any; mask: any; }) => {
-          console.log("map: ", elem)
             let mask = elem.type == "4" ? this.UtilsService.contactMask(elem.contact, 8) : this.UtilsService.contactMask(elem.contact, 3);
             elem.mask = mask;
             this.contactData.push(elem);
