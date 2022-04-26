@@ -14,12 +14,12 @@ export class PinService {
   }
 
   generar_pin(data:any): Observable<any> {
-    const url = this.baseUrl + "validar/generar/pin";
+    const url = this.baseUrl + "pin/generar";
     return this.http.post<any>(url, data);
   }
 
   validar_pin(data:any): Observable<any> {
-    const url = this.baseUrl + "validar/pin";
+    const url = this.baseUrl + "pin/validar";
     return this.http.post<any>(url, data);
   }
 }

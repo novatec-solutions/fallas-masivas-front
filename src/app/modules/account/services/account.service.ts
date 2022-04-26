@@ -14,7 +14,7 @@ export class AccountService {
   }
 
   consultar_datos(data:any): Observable<any> {
-    const url = this.baseUrl + "validar/consultar/datos";
+    const url = this.baseUrl + "cliente/cuenta";
     return this.http.post<any>(url, data);
   }
 }
