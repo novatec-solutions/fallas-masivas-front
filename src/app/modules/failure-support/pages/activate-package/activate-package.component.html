@@ -1,0 +1,29 @@
+<div class="container">
+  <ng-container *ngIf="!confirmation; else confirmPackage" >
+    <form [formGroup]="validateForm" (ngSubmit)="activateDataPackage()" novalidate class="content">
+      <img class="icon mb22" src="assets/images/user-check.svg">
+      <p class="text-center"><b>¡Discúlpanos! Actualmente tu zona presenta una falla y estamos trabajando para normalizar tu servicio lo antes posible.</b></p>
+      <p class="text-center">Si deseas, puedes activar un paquete de datos adicional en tu celular <b>SIN COSTO</b> mientras normalizamos tus servicios.</p>
+      <div class="info-group mb40">
+        <img class="icon" src="assets/images/table-look.svg">
+        <p><b>Digita aquí el numero de la línea móvil Claro en la cual deseas activar el paquete de datos adicional:</b></p>
+      </div>
+      <input matInput type="number" placeholder="Digita el número de celular" formControlName="cellPhone"/>
+      <div class="btn-box mt50">
+        <app-button class="app-button" buttonClass="{{validateForm.invalid?'btn bg-light-gray':'btn bg-red'}}" buttonDisabled="{{validateForm.invalid}}">Activar paquetes de datos</app-button>
+      </div>
+    </form>
+  </ng-container>
+  <ng-template #confirmPackage>
+    <div class="content info-content">
+      <p class="bold-info"><b>¡Disfruta un paquete de datos ilimitado Claro sin costo!</b></p>
+      <p>Mientras solucionamos las fallas de tus servicios hogar, vamos a activar un paquete de datos ilimitado a tu línea móvil Claro.</p>
+      <p>Por favor valida, si el número digitado es correcto:</p>
+      <p class="red-text"><b>3138856433</b></p>
+      <div class="btn-box mt50">
+        <app-button class="app-button" (click)="confirmNumber()" buttonClass="btn bg-red" buttonDisabled="false">Confirmar</app-button>
+        <app-button class="app-button" (click)="confirmation=false" buttonClass="btn bg-gray" buttonDisabled="false">Ajustar</app-button>
+      </div>
+    </div>
+  </ng-template>
+</div>

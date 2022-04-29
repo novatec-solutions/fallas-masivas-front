@@ -47,7 +47,7 @@ export class ValidateUserComponent implements OnInit {
         this.contact = false;
         const dialogRef = this.dialog.open(MessagesComponent, {
           width: '350px',
-          data: {text: res.response.description,
+          data: { icon: "info", text: res.response.description,
           grayText: "Cancelar", redText: "Intentar de Nuevo", grayClass:"btn bg-dark", redClass:"btn bg-red"},
         });
         dialogRef.afterClosed();

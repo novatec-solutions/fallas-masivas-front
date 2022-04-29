@@ -17,6 +17,11 @@ const routes: Routes = [
     loadChildren: () =>
       import('./modules/account/account.module').then((m) => m.AccountModule),
   },
+  {
+    path: 'soporte',
+    loadChildren: () =>
+      import('./modules/failure-support/failure-support.module').then((m) => m.FailureSupportModule),
+  },
   { path: '**', pathMatch: 'full', redirectTo: '' }
 ];
 

@@ -11,13 +11,13 @@
       <mat-radio-button class="radio-button" *ngFor="let data of dataSource" [value]="data">
         <img src="assets/images/home.svg">
         <div class="labels">
-          <label>Cuenta: {{data.cuenta}}</label>
-          <label class="bold-text">{{data.direccion}}</label>
+          <p>Cuenta: {{data.cuenta}}</p>
+          <p class="bold-text">{{data.direccion}}</p>
         </div>
       </mat-radio-button>
     </mat-radio-group>
-    <div class="btn-box">
-      <app-button class="app-button" buttonClass="{{selectedAddress==undefined?'btn bg-light-gray':'btn bg-red'}}" buttonDisabled="{{selectedAddress!=undefined?'false':'true'}}">Continuar</app-button>
+    <div class="btn-box mt50">
+      <app-button class="app-button" routerLink="/cuenta/equipos" buttonClass="{{selectedAddress==undefined?'btn bg-light-gray':'btn bg-red'}}" buttonDisabled="{{selectedAddress!=undefined?'false':'true'}}">Continuar</app-button>
       <app-button class="app-button" routerLink="/" buttonClass="btn bg-gray" buttonDisabled="false">Cancelar</app-button>
     </div>
   </div>

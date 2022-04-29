@@ -1,0 +1,56 @@
+@import "../../../../../assets/theme/variables.scss";
+.info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  img {
+    width: 25px;
+    padding-right: 7px;
+  }
+  label {
+    font-size: 14px;
+    font-weight: 500;
+    color: $red;
+  }
+}
+.radio-button {
+  border-radius: 15px;
+  ::ng-deep .mat-radio-label {
+    width: 95%;
+    .mat-radio-label-content {
+      width: 100%;
+      .labels {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        p {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          width: 95%;
+          margin: 0;
+          color: #464646;
+        }
+        .blue-text{
+          color: $blue;
+          font-size: 12px;
+        }
+        .blue-link{
+          border-bottom: 1px solid $blue;
+        }
+      }
+    }
+  }
+}
+
+::ng-deep {
+  .mat-radio-button.mat-accent .mat-radio-ripple .mat-ripple-element {
+    background-color: transparent !important;
+  }
+
+  .mat-radio-button.mat-accent .mat-radio-inner-circle {
+    background-color: $green; /*inner circle color change*/
+  }
+
+  .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+    border-color: $gray-border; /*outer ring color change*/
+  }
+}

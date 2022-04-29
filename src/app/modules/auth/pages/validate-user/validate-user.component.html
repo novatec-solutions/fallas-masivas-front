@@ -14,7 +14,7 @@
     <label class="field">Número de documento</label>
     <input matInput type="number" formControlName="documentNumber"/>
 
-    <div class="btn-box">
+    <div class="btn-box mt50">
       <app-button class="app-button" buttonClass="{{validateForm.invalid?'btn bg-light-gray':'btn bg-red'}}" buttonDisabled="{{validateForm.invalid}}">Continuar</app-button>
       <app-button class="app-button" buttonClass="btn bg-gray" buttonDisabled="false">Cancelar</app-button>
     </div>
@@ -24,7 +24,7 @@
     <mat-radio-group class="radio-group" [(ngModel)]="selectedContact">
       <mat-radio-button class="radio-button" *ngFor="let data of contactData" [value]="data">
         <img src="assets/images/{{data.type=='1'?'mail.svg':'tablet.svg'}}" />
-        <label>{{data.mask}}</label>
+        <p>{{data.mask}}</p>
       </mat-radio-button>
     </mat-radio-group>
     <div class="mt50">
