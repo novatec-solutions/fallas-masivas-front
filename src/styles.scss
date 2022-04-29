@@ -1,11 +1,17 @@
 @import "./assets/theme/variables.scss";
 @import "./assets/theme/responsive.scss";
 
+*{
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  box-sizing: border-box;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
 html,
 body {
   height: 100%;
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
   font-size: 12px;
 }
 
@@ -44,7 +50,7 @@ body {
         padding: 10px 15px;
         font-weight: 500;
         margin-bottom: 10px;
-        width: 90%;
+        width: 100%;
         .mat-radio-label {
           justify-content: space-around;
           flex-direction: row-reverse;
@@ -54,8 +60,6 @@ body {
             font-weight: bold;
           }
           .mat-radio-label-content {
-            display: flex;
-            align-items: center;
             padding-left: 0;
             min-height: 26px;
           }
@@ -65,13 +69,13 @@ body {
         border: 1px solid $green !important;
       }
     }
-    .btn-box {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 50px;
-      width: 100%;
-    }
   }
+}
+
+.btn-box {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
 }
 
 .mb40 {
@@ -86,7 +90,9 @@ body {
 .mt50 {
   margin-top: 50px;
 }
-
+.mb22{
+  margin-bottom: 22px;
+}
 .text-center {
   text-align: center;
 }

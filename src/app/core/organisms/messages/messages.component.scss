@@ -2,7 +2,7 @@
 
 ::ng-deep {
   .mat-dialog-container {
-    padding: 10px 24px 24px;
+    padding: 15px 24px 15px 24px;
     .mat-dialog-content {
       display: flex;
       justify-content: space-around;
@@ -14,15 +14,16 @@
         width: 20px;
         height: 20px;
         border-radius: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         .mat-icon {
-          height: 15px;
-          width: 20px;
+          height: 14px;
+          width: 14px;
         }
         .icon-close {
           color: $white;
-          font-size: 15px;
-          vertical-align: middle;
-          text-align: center;
+          font-size: 14px;
         }
       }
       .content {
@@ -33,15 +34,29 @@
         justify-content: center;
         flex-direction: column;
         margin-bottom: 16px;
-        img {
-          margin-bottom: 10px;
+        .icon {
+          margin-bottom: 15px;
         }
-        label {
+        .title{
+          font-weight: bold;
+          text-align: center;
+          font-size: 18px;
+          color: #464646;
+        }
+        .text {
           font-size: 13px;
           text-align: center;
           letter-spacing: 0px;
           color: $black-text;
           font-family: Roboto;
+          margin: 0;
+        }
+        .red-text{
+          color: $red;
+        }
+        .boldTextRed{
+          color: $red;
+          font-size: 22px;
         }
       }
     }

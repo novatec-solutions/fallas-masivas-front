@@ -39,7 +39,7 @@ export class ValidatePinComponent implements OnInit {
 
     this.PinService.generar_pin(param).subscribe((res: { error: number; }) => {
       if(res.error == 0 && !ini){
-        const data = {text: "Pin Generado satisfactoriamente",
+        const data = {icon: "info", text: "Pin Generado satisfactoriamente",
         redText: "Aceptar", redClass:"btn bg-red"};
         this.showMessage(data);
       }
@@ -57,7 +57,7 @@ export class ValidatePinComponent implements OnInit {
 
     this.PinService.validar_pin(param).subscribe((res: { error: number; response: { description: any; }; }) => {
       if(res.error > 0){
-        const data = {text: res.response.description,
+        const data = {icon: "info", text: res.response.description,
           grayText: "Finalizar", redText: "Atras", grayClass:"btn bg-dark", redClass:"btn bg-red"};
         this.showMessage(data);
       }else{

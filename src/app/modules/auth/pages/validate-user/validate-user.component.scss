@@ -17,22 +17,25 @@
     border: 1px solid #cbcbcb;
     border-radius: 4px;
     color: $dark-gray;
-    height: 20px;
-    width: 95%;
+    height: 38px;
+    width: 100%;
   }
 
   .radio-button {
     border-radius: 29px;
     ::ng-deep .mat-radio-label-content {
       width: 90%;
-      label {
+      display: flex;
+      align-items: center;
+      p {
         overflow: hidden;
         text-overflow: ellipsis;
+        margin: 0;
       }
-    }
-    img {
-      width: 22px;
-      padding-right: 10px;
+      img {
+        height: 27px;
+        padding-right: 10px;
+      }
     }
   }
 }

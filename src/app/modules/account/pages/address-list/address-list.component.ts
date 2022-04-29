@@ -10,7 +10,6 @@ import { AccountService } from '../../services/account.service';
   styleUrls: ['./address-list.component.scss']
 })
 export class AddressListComponent implements OnInit {
-  displayedColumns: string[] = ['slide', 'cuenta', 'direccion'];
   selectedAddress: string | undefined;
   dataSource: any = [];
 
@@ -32,7 +31,9 @@ export class AddressListComponent implements OnInit {
       if(res.error > 0){
         const dialogRef = this.dialog.open(MessagesComponent, {
           width: '350px',
-          data: {text: res.response.description,
+          data: {
+            icon: "info",
+            text: res.response.description,
             grayText: "Finalizar", redText: "Soporte asistido WhatsApp", grayClass:"btn bg-dark", redClass:"btn bg-red"},
         });
         dialogRef.afterClosed();
