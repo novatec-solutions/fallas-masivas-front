@@ -2,8 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { AccountRoutingModule } from './account-routing.module';
-import { AddressListComponent } from './pages/address-list/address-list.component';
-import { EquipmentListComponent } from './pages/equipment-list/equipment-list.component';
+import { AccountListComponent } from './pages/account-list/account-list.component';
 
 import { MaterialModule } from 'src/app/core/material/material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -11,8 +10,7 @@ import { CoreModule } from 'src/app/core/core.module';
 
 @NgModule({
   declarations: [
-    AddressListComponent,
-    EquipmentListComponent
+    AccountListComponent
   ],
   imports: [
     CommonModule,

@@ -1,16 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AddressListComponent } from './pages/address-list/address-list.component';
-import { EquipmentListComponent } from './pages/equipment-list/equipment-list.component';
+import { AccountListComponent } from './pages/account-list/account-list.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: AddressListComponent,
-  },
-  {
-    path: 'equipos',
-    component: EquipmentListComponent,
+    component: AccountListComponent,
   },
 ];
 

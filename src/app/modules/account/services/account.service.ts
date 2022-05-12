@@ -13,8 +13,19 @@ export class AccountService {
     this.baseUrl = environment.url;
   }
 
-  consultar_datos(data:any): Observable<any> {
+  get_address_list(data:any): Observable<any> {
     const url = this.baseUrl + "cliente/cuenta";
+    return this.http.post<any>(url, data);
+  }
+
+  operation_record(data:any):Observable<any> {
+    const url = this.baseUrl + "auditoria/registrar";
+    return this.http.post<any>(url, data);
+  }
+
+  get_equipment_list(data:any): Observable<any> {
+    const url = "http://localhost:3000/servicios/consultar";
+    // const url = this.baseUrl + "servicios/consultar";
     return this.http.post<any>(url, data);
   }
 }

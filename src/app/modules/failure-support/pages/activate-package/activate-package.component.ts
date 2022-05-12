@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
 import { MessagesComponent } from 'src/app/core/organisms/messages/messages.component';
+import { SupportService } from '../../services/support.service';
 
 @Component({
   selector: 'app-activate-package',
@@ -16,7 +16,7 @@ export class ActivatePackageComponent implements OnInit {
 
   constructor(public fb: FormBuilder,
     public dialog: MatDialog,
-    private router: Router) {
+    private SupportService: SupportService) {
     this.validateForm = this.fb.group({
       cellPhone: ['', [Validators.required]]
     });
@@ -48,7 +48,7 @@ export class ActivatePackageComponent implements OnInit {
       this.showMessage(data);
       this.dialogRef.afterClosed().subscribe((result: any) => {
         if(result == true)
-          this.router.navigate(['/soporte/paquete']);
+          window.location.href='https://wa.me/573117488888?text=Fallas%20Masivas';
       });
     }
     if(cellPhone == '123'){
@@ -57,16 +57,24 @@ export class ActivatePackageComponent implements OnInit {
   }
 
   confirmNumber(){
-    const data = {
-      // icon: "info", falta imagen
-      boldTextHeader: "Ya quedo activo el paquete de datos ilimitado en la línea móvil Claro:",
-      boldTextRed: "3138856433",
-      text: "Recuerda que este paquete no tiene costo y los puedes disfrutar mientras restablecemos tus servicios hogar.",
-      text2: "Te notificaremos a este número cuando el servicio ya se encuentre normalizado.",
-      redText: "Finalizar", redClass:"btn bg-red"
+    const param = {
+      "account": "001", //localStorage.getItem('account')
+      "msisdn": "3100205613" //this.validateForm.value.cellPhone
     };
-    this.showMessage(data);
-    this.dialogRef.afterClosed();
+
+    this.SupportService.activate_package(param).subscribe( res => {
+
+      const data = {
+        // icon: "info", falta imagen
+        boldTextHeader: "Ya quedo activo el paquete de datos ilimitado en la línea móvil Claro:",
+        boldTextRed: "3138856433",
+        text: "Recuerda que este paquete no tiene costo y los puedes disfrutar mientras restablecemos tus servicios hogar.",
+        text2: "Te notificaremos a este número cuando el servicio ya se encuentre normalizado.",
+        redText: "Finalizar", redClass:"btn bg-red"
+      };
+      this.showMessage(data);
+      this.dialogRef.afterClosed();
+    });
   }
 
   showMessage(info: any){

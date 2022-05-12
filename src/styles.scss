@@ -1,22 +1,17 @@
 @import "./assets/theme/variables.scss";
 @import "./assets/theme/responsive.scss";
 
-*{
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  box-sizing: border-box;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-}
 html,
 body {
   height: 100%;
   margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
   font-size: 12px;
 }
 
 .container {
-  height: 100%;
   min-height: 100%;
   position: relative;
   display: flex;
@@ -26,7 +21,7 @@ body {
   .text-box {
     width: 70%;
     text-align: center;
-    margin-bottom: 35px;
+    margin: 30px 0;
     .bold-title {
       font-size: 30px;
       color: $black;
@@ -51,6 +46,7 @@ body {
         font-weight: 500;
         margin-bottom: 10px;
         width: 100%;
+        box-sizing: border-box;
         .mat-radio-label {
           justify-content: space-around;
           flex-direction: row-reverse;

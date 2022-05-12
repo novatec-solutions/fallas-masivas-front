@@ -18,15 +18,19 @@
   ::ng-deep .mat-radio-label {
     width: 95%;
     .mat-radio-label-content {
-      width: 100%;
+      display: flex;
+      align-items: center;
+      width: 95%;
       .labels {
-        overflow: hidden;
-        text-overflow: ellipsis;
+        width: 85%;
+        padding-left: 10px;
         p {
           overflow: hidden;
           text-overflow: ellipsis;
           width: 95%;
           margin: 0;
+        }
+        .gray-text{
           color: #464646;
         }
         .blue-text{
@@ -35,6 +39,10 @@
         }
         .blue-link{
           border-bottom: 1px solid $blue;
+        }
+        img {
+          width: 26px;
+          padding-right: 10px;
         }
       }
     }

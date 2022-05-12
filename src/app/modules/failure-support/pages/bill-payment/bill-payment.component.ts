@@ -12,4 +12,8 @@ export class BillPaymentComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  portalpagos(){
+    window.location.href='https://portalpagos.claro.com.co/';
+  }
+
 }

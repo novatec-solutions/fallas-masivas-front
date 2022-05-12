@@ -5,8 +5,8 @@
     <p>Tus servicios presentan fallas, ya que tienes un saldo pendiente por pagar. Te invitamos a realizar el pago para que sigas disfrutando de tus servicios como tanto te gusta.</p>
     <label>Valor a pagar $42.500</label>
     <div class="btn-box mt50">
-      <app-button class="app-button" routerLink="/soporte" buttonClass="btn bg-red" buttonDisabled="false">Paga tu factura aquí</app-button>
-      <app-button class="app-button" routerLink="/cuenta/equipos" buttonClass="btn bg-gray" buttonDisabled="false">Finalizar</app-button>
+      <app-button class="app-button" (click)="portalpagos()" buttonClass="btn bg-red" buttonDisabled="false">Paga tu factura aquí</app-button>
+      <app-button class="app-button" routerLink="/cuenta" buttonClass="btn bg-gray" buttonDisabled="false">Finalizar</app-button>
     </div>
   </div>
 </div>
