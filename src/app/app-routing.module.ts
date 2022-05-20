@@ -22,7 +22,7 @@ const routes: Routes = [
     loadChildren: () =>
       import('./modules/failure-support/failure-support.module').then((m) => m.FailureSupportModule),
   },
-  // { path: '**', pathMatch: 'full', redirectTo: '' }
+  { path: '**', pathMatch: 'full', redirectTo: '' }
 ];
 
 @NgModule({
