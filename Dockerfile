@@ -9,6 +9,7 @@ COPY . .
 RUN apk update && \
     apk add nodejs npm make curl g++
 
+RUN npm ci
 RUN npm run build --prod
 
 RUN rm -rf /usr/share/nginx/html/*
