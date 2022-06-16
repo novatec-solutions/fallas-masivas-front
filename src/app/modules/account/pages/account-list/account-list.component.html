@@ -4,7 +4,7 @@
   </div>
   <div class="content">
     <ng-container *ngIf="addressList else equipmentList" >
-      <div *ngIf="dataSource.length==0" class="info">
+      <div *ngIf="dataSource?.length==0" class="info">
         <img src="assets/images/info.svg">
         <label>No tiene cuentas asociadas </label>
       </div>
@@ -17,13 +17,13 @@
           </div>
         </mat-radio-button>
       </mat-radio-group>
-      <div class="btn-box mt50">
+      <div class="btn-box mt30">
         <app-button class="app-button" (click)="checkEquipmentList()" buttonClass="{{selectedAddress==undefined?'btn bg-light-gray':'btn bg-red'}}" buttonDisabled="{{selectedAddress!=undefined?'false':'true'}}">Continuar</app-button>
         <app-button class="app-button" routerLink="/" buttonClass="btn bg-gray" buttonDisabled="false">Cancelar</app-button>
       </div>
     </ng-container>
     <ng-template #equipmentList>
-      <div *ngIf="dataSource.length==0" class="info">
+      <div *ngIf="dataSource?.length==0" class="info">
         <img src="assets/images/info.svg">
         <label>No tiene equipos asociados</label>
       </div>
@@ -37,7 +37,7 @@
           </div>
         </mat-radio-button>
       </mat-radio-group>
-      <div class="btn-box mt50">
+      <div class="btn-box mt30">
         <app-button class="app-button" (click)="checkEquipment()" buttonClass="{{selectedEquipment==undefined?'btn bg-light-gray':'btn bg-red'}}" buttonDisabled="{{selectedEquipment!=undefined?'false':'true'}}">Continuar</app-button>
         <app-button class="app-button" routerLink="/" buttonClass="btn bg-gray" buttonDisabled="false">Cancelar</app-button>
       </div>

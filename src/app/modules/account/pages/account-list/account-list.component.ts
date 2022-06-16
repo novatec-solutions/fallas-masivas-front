@@ -17,22 +17,24 @@ export class AccountListComponent implements OnInit {
   addressList: boolean = true;
   title!: string;
   dialogRef: any;
+  documentType!: string;
+  documentNum!: string;
 
   constructor(private AccountService: AccountService,
     public dialog: MatDialog,
     private router: Router) { }
 
   ngOnInit(): void {
+    [this.documentType, this.documentNum] = localStorage.getItem('document')?.split("-") || [];
     this.checkAddressList();
   }
 
   checkAddressList(){
-    this.title = "Selecciona la dirección en la cual presentas la falla en tus servicios";
-    const [type, document] = localStorage.getItem('document')?.split("-") || [];
+    this.title = "Selecciona la dirección en la cual presentas la falla en tus servicios:";
 
     const param = {
-      "documentNumber": document,
-      "documentType": getValue(type).id
+      "documentNumber": this.documentNum,
+      "documentType": getValue(this.documentType).id
     };
 
     this.AccountService.get_address_list(param).subscribe( res => {
@@ -41,26 +43,26 @@ export class AccountListComponent implements OnInit {
   }
 
   checkEquipmentList(){
-    const [type, document] = localStorage.getItem('document')?.split("-") || [];
     const contact = JSON.parse(localStorage.getItem('contact') as any);
     const min = contact.type == 4 ? contact.contact : localStorage.getItem('firstPhone');
+    
     const param = {
       "customerCode": this.selectedAddress.cuenta,
-      "accountCode": type+""+document
+      "accountCode": this.documentType+""+this.documentNum
     };
 
     this.AccountService.operation_record(param).subscribe( res => {});
 
     const data = {
-      "account": "40125433", //this.selectedAddress.cuenta,
-      "document": "1234567890", //document
-      "documentType": "CC", //type
-      "name": "abc", //""
-      "min": "25" //min
+      "account": "40125433",//this.selectedAddress.cuenta,
+      "document": this.documentNum,
+      "documentType": this.documentType,
+      "name": "abc",
+      "min": min
     };
 
     this.AccountService.get_equipment_list(data).subscribe(res => {
-      if(res.response.length == 0){
+      if(res.response && res.response?.length == 0){
         const dialogRef = this.dialog.open(MessagesComponent, {
           width: '350px',
           data: {
@@ -74,7 +76,7 @@ export class AccountListComponent implements OnInit {
         });
       }else{
         this.addressList = false;
-        this.title = "Por favor seleccione el equipo que presenta la falla. Si el inconveniente se presenta en más de un servicio seleccione su dispositivo de internet";
+        this.title = "Selecciona el equipo que no está funcionando correctamente. Si son varios equipos selecciona el módem de internet";
         this.dataSource = res.response;
         localStorage.setItem('account', this.selectedAddress.cuenta);
       }
@@ -92,37 +94,84 @@ export class AccountListComponent implements OnInit {
   }
 
   checkEquipment(){
-    if(this.selectedEquipment.technology == "LTE"){
-      this.router.navigate(['/soporte']);
-    }
+    const data = { 
+      "msisdn": 626,
+      "isInspira": false,
+      "documentType": this.documentType,
+      //this.documentNum
+      //this.selectedAddress.cuenta,
+      "service": [ this.selectedEquipment ],
+      
+      // "account": 8515291, //Mora
+      // "documentId": "1031141581",
 
-    if(this.selectedEquipment.technology == "CTI"){
-      const data = {
-        icon: "info",
-        text: "Nuestro equipo técnico esta trabajando para solucionar las fallas presentadas en tu zona.",
-        text2: "Una vez hayamos restablecido los servicios, notificaremos por medios de un mensaje de texto al número de celular del titular.",
-        boldText:"Radicado: INC2345",
-        redText: "Continuar", redClass:"btn bg-red"
-      };
-      this.showMessage(data);
-      this.dialogRef.afterClosed().subscribe((result: any) => {
-        if(result == true)
-          this.router.navigate(['/soporte/paquete']);
-      });
-    }
+      "account": 17090382, //Mantenimiento masivo - radicado
+      "documentId": "52953444",
 
-    if(this.selectedEquipment.technology == "NGR"){
-      const data = {
-        icon: "info",
-        text: "Actualmente nuestros técnicos se encuentran realizando trabajos de mantenimiento en tu zona. Esperamos restablecer tus servicios lo antes posible.",
-        redText: "Continuar", redClass:"btn bg-red"
-      };
-      this.showMessage(data);
-      this.dialogRef.afterClosed().subscribe((result: any) => {
-        if(result == true)
-          this.router.navigate(['/soporte/paquete']);
-      });
-    }
+      // "account": 17513584, //Mantenimiento especifico
+      // "documentId": "1031141555",
+    };
+
+    this.AccountService.diagnose_equipment_failure(data).subscribe(res => {
+      if(res.error == 0){
+        switch(res.response.typeFailure) { 
+          case '1': { 
+            this.router.navigate(['/soporte']);
+            break; 
+          } 
+          case '2': { 
+            const data = {
+              icon: "info",
+              text: "Nuestro equipo técnico está trabajando para solucionar las fallas presentadas en tu zona.",
+              text2: "Una vez hayamos restablecido los servicios, notificaremos por medios de un mensaje de texto al número de celular del titular.",
+              boldText: `Radicado: ${res.response.caseNumber}`,
+              redText: "Continuar", redClass:"btn bg-red"
+            };
+            this.showMessage(data);
+            this.dialogRef.afterClosed().subscribe((result: any) => {
+              if(result == true)
+                this.router.navigate(['/soporte/paquete']);
+            });
+            break; 
+          }
+          case '3': { 
+            const data = {
+              icon: "info",
+              text: "Actualmente nuestros técnicos se encuentran realizando trabajos de mantenimiento en tu zona. Esperamos restablecer tus servicios lo antes posible.",
+              redText: "Continuar", redClass:"btn bg-red"
+            };
+            this.showMessage(data);
+            this.dialogRef.afterClosed().subscribe((result: any) => {
+              if(result == true)
+                this.router.navigate(['/soporte/paquete']);
+            });
+            break; 
+         } default: {
+          const data = {
+            icon: "info",
+            text: "No se encontraron fallas",
+            redText: "Finalizar", redClass:"btn bg-red"
+          };
+          this.showMessage(data);
+          this.dialogRef.afterClosed().subscribe((result: any) => {
+            if(result == true)
+              this.router.navigate(['/']);
+          });
+          break; 
+         }
+        } 
+      }else{
+        const dialogRef = this.dialog.open(MessagesComponent, {
+              width: '350px',
+              data: {
+                icon: "x-circle",
+                title: "¡Oops, algo salió mal!",
+                text: "Se ha presentado un error al hacer la consulta, por favor intenta nuevamente.",
+                redText: "Continuar", redClass:"btn bg-red"},
+            });
+            dialogRef.afterClosed();
+      }
+    });
   }
 
   showMessage(info: any){

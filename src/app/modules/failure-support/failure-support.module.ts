@@ -6,6 +6,7 @@ import { BillPaymentComponent } from './pages/bill-payment/bill-payment.componen
 import { ActivatePackageComponent } from './pages/activate-package/activate-package.component';
 import { CoreModule } from 'src/app/core/core.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MaterialModule } from 'src/app/core/material/material.module';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     FailureSupportRoutingModule,
     CoreModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MaterialModule
   ]
 })
 export class FailureSupportModule { }

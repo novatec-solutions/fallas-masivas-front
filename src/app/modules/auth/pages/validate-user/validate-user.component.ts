@@ -54,8 +54,7 @@ export class ValidateUserComponent implements OnInit {
       }else{
         localStorage.setItem('document', `${form.documentType}-${form.documentNumber}`);
         this.contact = true;
-        this.title = "Los datos que registraste no se encuentran en nuestro sistema. Por favor verifica e intenta de nuevo";
-        //Sr Usuario enviaremos un código de confirmación de identidad, por favor indicanos por que medio desea recibirlo
+        this.title = "Por tu seguridad, enviaremos un código para validar tu identidad. Confírmanos por cuál medio te gustaría recibirlo:";
 
         let firstPhone = "";
         res.response.map((elem: { type: any; contact: any; mask: any; }) => {

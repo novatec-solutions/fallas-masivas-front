@@ -28,4 +28,11 @@ export class AccountService {
     // const url = this.baseUrl + "servicios/consultar";
     return this.http.post<any>(url, data);
   }
+
+  
+  diagnose_equipment_failure(data:any): Observable<any> {
+    const url = "http://localhost:3000/falla/diagnosticar";
+    // const url = this.baseUrl + "falla/diagnosticar";
+    return this.http.post<any>(url, data);
+  }
 }

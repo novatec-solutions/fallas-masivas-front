@@ -11,12 +11,11 @@
 
       .content-icon {
         background: $red;
-        width: 20px;
-        height: 20px;
         border-radius: 50px;
         display: flex;
         align-items: center;
         justify-content: center;
+        padding: 5px;
         .mat-icon {
           height: 14px;
           width: 14px;
@@ -50,6 +49,7 @@
           color: $black-text;
           font-family: Roboto;
           margin: 0;
+          margin-bottom: 10px;
         }
         .red-text{
           color: $red;

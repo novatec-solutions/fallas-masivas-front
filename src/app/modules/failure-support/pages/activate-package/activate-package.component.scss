@@ -19,15 +19,45 @@ form{
   }
   input{
     background: $white;
-    padding: 8px 10px;
+    padding: 12px;
     font-size: 14px;
     letter-spacing: 0px;
     outline: none;
     border: 1px solid #cbcbcb;
     border-radius: 4px;
     color: $dark-gray;
-    height: 38px;
     width: 100%;
+    text-align: center;
+  }
+  .toggle{
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+    margin-top: 20px;
+    .blue-text{
+      color: #1D97E3;
+      font-size: 15px;
+      font-weight: bold;
+      margin: 0;
+    }
+    ::ng-deep {
+      .mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-bar {
+        background-color: rgba(0, 0, 0, 0.2);
+      }
+    
+      .mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-thumb {
+        background-color: #d8291d;
+      }
+    
+      span.mat-slide-toggle-bar {
+        height: 23px;
+        border-radius: 12px;
+        .mat-slide-toggle-thumb-container {
+          top: 2px !important;
+          left: 1px !important;
+        }
+      }
+    }
   }
 }
 
@@ -49,3 +79,5 @@ form{
     font-size: 27px;
   }
 }
+
+

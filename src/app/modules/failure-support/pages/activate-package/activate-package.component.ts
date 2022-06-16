@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { MessagesComponent } from 'src/app/core/organisms/messages/messages.component';
 import { SupportService } from '../../services/support.service';
 
@@ -12,13 +13,17 @@ import { SupportService } from '../../services/support.service';
 export class ActivatePackageComponent implements OnInit {
   validateForm!: FormGroup;
   dialogRef: any;
-  confirmation: boolean = false;
+  access: boolean = false;
+  pageType = 0;
+  cellPhone!: string ;
 
   constructor(public fb: FormBuilder,
     public dialog: MatDialog,
-    private SupportService: SupportService) {
+    private SupportService: SupportService,
+    private router: Router) {
     this.validateForm = this.fb.group({
-      cellPhone: ['', [Validators.required]]
+      cellPhone: ['', [Validators.required]],
+      terms: [false, Validators.requiredTrue]
     });
   }
 
@@ -26,54 +31,58 @@ export class ActivatePackageComponent implements OnInit {
   }
 
   activateDataPackage(){
-    const cellPhone = this.validateForm.value.cellPhone;
-    if(cellPhone == '1'){
+    this.cellPhone = this.validateForm.value.cellPhone;
+    const regex = new RegExp(/^3{1}\d{9}$/);
+    if(!regex.test(this.cellPhone)){
       const data = {
         icon: "x-circle",
         title: "¡Oops, algo salió mal!",
         text: "El número que ingresaste no es válido, revisa que no tenga espacio, ni signos de puntuación e inténtalo de nuevo.",
-        redText: "Continuar", redClass:"btn bg-red"
+        redText: "Intentar nuevamente", redClass:"btn bg-red"
       };
       this.showMessage(data);
       this.dialogRef.afterClosed();
-    }
-    if(cellPhone == '12'){
-      const data = {
-        icon: "info",
-        boldTextHeader: "Aprovecha el paquete de datos adicional que está activo en la línea 3138856433.",
-        text: "¡Seguimos trabajando en normalizar tus servicios hogar!",
-        redText: "Soporte asistido WhatsApp", redClass:"btn bg-red",
-        grayText: "Cerrar", grayClass:"btn bg-dark"
-      };
-      this.showMessage(data);
-      this.dialogRef.afterClosed().subscribe((result: any) => {
-        if(result == true)
-          window.location.href='https://wa.me/573117488888?text=Fallas%20Masivas';
-      });
-    }
-    if(cellPhone == '123'){
-      this.confirmation = true;
+    }else{
+      this.access = true;
+      this.pageType = 1;
     }
   }
 
   confirmNumber(){
     const param = {
-      "account": "001", //localStorage.getItem('account')
-      "msisdn": "3100205613" //this.validateForm.value.cellPhone
+      "account": localStorage.getItem('account'),
+      "msisdn": "3100205613" //this.cellPhone
     };
 
     this.SupportService.activate_package(param).subscribe( res => {
-
-      const data = {
-        // icon: "info", falta imagen
-        boldTextHeader: "Ya quedo activo el paquete de datos ilimitado en la línea móvil Claro:",
-        boldTextRed: "3138856433",
-        text: "Recuerda que este paquete no tiene costo y los puedes disfrutar mientras restablecemos tus servicios hogar.",
-        text2: "Te notificaremos a este número cuando el servicio ya se encuentre normalizado.",
-        redText: "Finalizar", redClass:"btn bg-red"
-      };
-      this.showMessage(data);
-      this.dialogRef.afterClosed();
+      if(res.error == 1){
+        const data = {
+          icon: "info",
+          text: `Ya tienes un paquete de datos activo en esta línea ${this.cellPhone}.`,
+          text2: "Si tienes una duda adicional puedes contactarte con nosotros.",
+          redText: "Soporte asistido WhatsApp", redClass:"btn bg-red",
+          grayText: "Cerrar", grayClass:"btn bg-dark"
+        };
+        this.showMessage(data);
+        this.dialogRef.afterClosed().subscribe((result: any) => {
+          if(result == true)
+            window.location.href='https://wa.me/573117488888?text=Fallas%20Masivas';
+        });
+      }
+      
+      if(res.error == 0){
+        const data = {
+          icon: "info",
+          text: "Recuerda que este paquete de datos no tiene costo y estará activo por las próximas 72 horas, a partir de este momento.",
+          text2: "Te notificaremos al número de contacto del titular cuando el servicio ya se encuentre normalizado.",
+          redText: "Finalizar", redClass:"btn bg-red"
+        };
+        this.showMessage(data);
+        this.dialogRef.afterClosed().subscribe((result: any) => {
+          if(result == true)
+            this.router.navigate(['/']);
+        });
+      }
     });
   }
 
@@ -82,5 +91,21 @@ export class ActivatePackageComponent implements OnInit {
       width: '350px',
       data: info
     });
+  }
+
+  
+  noClaroLine(){
+    this.access = true;
+    this.pageType = 2;
+  }
+
+  seeTermsConditions(){
+    const data = {
+      boldTextHeader: "Términos y Condiciones",
+      text: "Paquete solución móvil convergente",
+      text2: "Este no es un paquete comercial Comcel se reserva el derecho de modificar o cancelar los beneficios, términos y condiciones que ofrece con este paquete sin previo aviso.",
+    };
+    this.showMessage(data);
+    this.dialogRef.afterClosed();
   }
 }
