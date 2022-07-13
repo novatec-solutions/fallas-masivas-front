@@ -33,8 +33,8 @@ export class ValidatePinComponent implements OnInit {
   generatePin(ini:boolean = false){
     const param = {
       "documentClient" : localStorage.getItem('document'),
-      "contactData" : this.contact.contact,
-      "contactType" : this.contact.type
+      "contactData" : "3134933777", //this.contact.contact,
+      "contactType" : "4"//this.contact.type
     };
 
     this.PinService.generar_pin(param).subscribe((res: { error: number; }) => {
