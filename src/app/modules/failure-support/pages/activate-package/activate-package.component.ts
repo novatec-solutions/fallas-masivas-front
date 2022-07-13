@@ -98,14 +98,4 @@ export class ActivatePackageComponent implements OnInit {
     this.access = true;
     this.pageType = 2;
   }
-
-  seeTermsConditions(){
-    const data = {
-      boldTextHeader: "Términos y Condiciones",
-      text: "Paquete solución móvil convergente",
-      text2: "Este no es un paquete comercial Comcel se reserva el derecho de modificar o cancelar los beneficios, términos y condiciones que ofrece con este paquete sin previo aviso.",
-    };
-    this.showMessage(data);
-    this.dialogRef.afterClosed();
-  }
 }

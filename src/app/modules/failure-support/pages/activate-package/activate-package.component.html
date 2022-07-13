@@ -11,7 +11,9 @@
         <app-button class="app-button" buttonClass="btn bg-gray" buttonDisabled="false" (click)="noClaroLine()">No tengo línea Claro</app-button>
       </div>
       <div class="toggle">
-        <mat-slide-toggle formControlName="terms"> <p class="blue-text" (click)="seeTermsConditions()">Términos y condiciones</p></mat-slide-toggle>
+        <mat-slide-toggle formControlName="terms">
+          <a class="blue-text" href="/assets/files/tyc_paquete.pdf/" target="_blank">Términos y condiciones</a>
+        </mat-slide-toggle>
       </div>
       
     </form>
