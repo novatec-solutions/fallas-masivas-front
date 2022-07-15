@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { MessagesComponent } from 'src/app/core/organisms/messages/messages.component';
 import { LoadingService } from 'src/app/core/services/loading.service';
+import { environment } from 'src/environments/environment';
 import { SupportService } from '../../services/support.service';
 
 @Component({
@@ -17,6 +18,9 @@ export class ActivatePackageComponent implements OnInit {
   access: boolean = false;
   pageType = 0;
   cellPhone!: string ;
+  public get assetsTyCPath(){
+    return environment.assetsTyCPath;
+  }
 
   constructor(public fb: FormBuilder,
     public dialog: MatDialog,

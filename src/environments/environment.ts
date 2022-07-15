@@ -6,7 +6,8 @@ export const environment = {
   production: false,
   url: 'http://10.3.0.37:451/',
   iv: 'abcdef9876543210abcdef9876543210',
-  secretKey: '0123456789abcdef0123456789abcdef'
+  secretKey: '0123456789abcdef0123456789abcdef',
+  assetsTyCPath: '/assets/files/tyc_paquete.pdf'
 };
 
 /*

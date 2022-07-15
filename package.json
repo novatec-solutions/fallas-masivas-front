@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build-prod": "ng build --base-href /fallas-masivas/",
+    "build-prod": "ng build --prod --base-href /fallas-masivas/",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
