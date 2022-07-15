@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { getValue } from 'src/app/core/enums/document-type.enum';
 import { MessagesComponent } from 'src/app/core/organisms/messages/messages.component';
+import { LoadingService } from 'src/app/core/services/loading.service';
 import { AccountService } from '../../services/account.service';
 
 @Component({
@@ -22,7 +23,8 @@ export class AccountListComponent implements OnInit {
 
   constructor(private AccountService: AccountService,
     public dialog: MatDialog,
-    private router: Router) { }
+    private router: Router,
+    public loaderService: LoadingService) { }
 
   ngOnInit(): void {
     [this.documentType, this.documentNum] = localStorage.getItem('document')?.split("-") || [];
@@ -43,6 +45,7 @@ export class AccountListComponent implements OnInit {
   }
 
   checkEquipmentList(){
+    this.loaderService.show();
     const contact = JSON.parse(localStorage.getItem('contact') as any);
     const min = contact.type == 4 ? contact.contact : localStorage.getItem('firstPhone');
     
@@ -54,31 +57,37 @@ export class AccountListComponent implements OnInit {
     this.AccountService.operation_record(param).subscribe( res => {});
 
     const data = {
-      "account": "40125433",//this.selectedAddress.cuenta,
+      "account": this.selectedAddress.cuenta,
       "document": this.documentNum,
       "documentType": this.documentType,
       "name": "abc",
       "min": min
     };
 
-    this.AccountService.get_equipment_list(data).subscribe(res => {
-      if(res.response && res.response?.length == 0){
-        const dialogRef = this.dialog.open(MessagesComponent, {
-          width: '350px',
-          data: {
-            icon: "info",
-            text: res.response.description,
-            grayText: "Finalizar", redText: "Soporte asistido WhatsApp", grayClass:"btn bg-dark", redClass:"btn bg-red"},
-        });
-        dialogRef.afterClosed().subscribe((result: any) => {
-          if(result == true)
-            window.location.href='https://wa.me/573117488888?text=Fallas%20Masivas';
-        });
-      }else{
-        this.addressList = false;
-        this.title = "Selecciona el equipo que no está funcionando correctamente. Si son varios equipos selecciona el módem de internet";
-        this.dataSource = res.response;
-        localStorage.setItem('account', this.selectedAddress.cuenta);
+    this.AccountService.get_equipment_list(data).subscribe({
+      next: (res) => {
+        if(res.response && res.response?.length == 0){
+          const dialogRef = this.dialog.open(MessagesComponent, {
+            width: '350px',
+            data: {
+              icon: "info",
+              text: res.response.description,
+              grayText: "Finalizar", redText: "Soporte asistido WhatsApp", grayClass:"btn bg-dark", redClass:"btn bg-red"},
+          });
+          dialogRef.afterClosed().subscribe((result: any) => {
+            if(result == true)
+              window.location.href='https://wa.me/573117488888?text=Fallas%20Masivas';
+          });
+        }else{
+          this.addressList = false;
+          this.title = "Selecciona el equipo que no está funcionando correctamente. Si son varios equipos selecciona el módem de internet";
+          this.dataSource = res.response;
+          localStorage.setItem('account', this.selectedAddress.cuenta);
+        }
+      }, error: () =>{
+        this.loaderService.hide();
+      }, complete: () =>{
+        this.loaderService.hide();
       }
     });
   }
@@ -94,12 +103,13 @@ export class AccountListComponent implements OnInit {
   }
 
   checkEquipment(){
+    this.loaderService.show();
     const data = { 
       "msisdn": 626,
       "isInspira": false,
       "documentType": this.documentType,
-      //this.documentNum
-      //this.selectedAddress.cuenta,
+      // "documentId": this.documentNum,
+      // "account": this.selectedAddress.cuenta,
       "service": [ this.selectedEquipment ],
       
       // "account": 8515291, //Mora
@@ -112,64 +122,71 @@ export class AccountListComponent implements OnInit {
       // "documentId": "1031141555",
     };
 
-    this.AccountService.diagnose_equipment_failure(data).subscribe(res => {
-      if(res.error == 0){
-        switch(res.response.typeFailure) { 
-          case '1': { 
-            this.router.navigate(['/soporte']);
-            break; 
-          } 
-          case '2': { 
+    this.AccountService.diagnose_equipment_failure(data).subscribe({ 
+      next: (res) => {
+        if(res.error === 0){
+          switch(res.response.typeFailure) { 
+            case '1': { 
+              this.router.navigate(['/soporte']);
+              break; 
+            } 
+            case '2': { 
+              const data = {
+                icon: "info",
+                text: "Nuestro equipo técnico está trabajando para solucionar las fallas presentadas en tu zona.",
+                text2: "Una vez hayamos restablecido los servicios, notificaremos por medios de un mensaje de texto al número de celular del titular.",
+                boldText: `Radicado: ${res.response.caseNumber}`,
+                redText: "Continuar", redClass:"btn bg-red"
+              };
+              this.showMessage(data);
+              this.dialogRef.afterClosed().subscribe((result: any) => {
+                if(result == true)
+                  this.router.navigate(['/soporte/paquete']);
+              });
+              break; 
+            }
+            case '3': { 
+              const data = {
+                icon: "info",
+                text: "Actualmente nuestros técnicos se encuentran realizando trabajos de mantenimiento en tu zona. Esperamos restablecer tus servicios lo antes posible.",
+                redText: "Continuar", redClass:"btn bg-red"
+              };
+              this.showMessage(data);
+              this.dialogRef.afterClosed().subscribe((result: any) => {
+                if(result == true)
+                  this.router.navigate(['/soporte/paquete']);
+              });
+              break; 
+          } default: {
             const data = {
               icon: "info",
-              text: "Nuestro equipo técnico está trabajando para solucionar las fallas presentadas en tu zona.",
-              text2: "Una vez hayamos restablecido los servicios, notificaremos por medios de un mensaje de texto al número de celular del titular.",
-              boldText: `Radicado: ${res.response.caseNumber}`,
-              redText: "Continuar", redClass:"btn bg-red"
+              text: "No se encontraron fallas",
+              redText: "Finalizar", redClass:"btn bg-red"
             };
             this.showMessage(data);
             this.dialogRef.afterClosed().subscribe((result: any) => {
               if(result == true)
-                this.router.navigate(['/soporte/paquete']);
+                this.router.navigate(['/']);
             });
             break; 
           }
-          case '3': { 
-            const data = {
-              icon: "info",
-              text: "Actualmente nuestros técnicos se encuentran realizando trabajos de mantenimiento en tu zona. Esperamos restablecer tus servicios lo antes posible.",
-              redText: "Continuar", redClass:"btn bg-red"
-            };
-            this.showMessage(data);
-            this.dialogRef.afterClosed().subscribe((result: any) => {
-              if(result == true)
-                this.router.navigate(['/soporte/paquete']);
-            });
-            break; 
-         } default: {
-          const data = {
-            icon: "info",
-            text: "No se encontraron fallas",
-            redText: "Finalizar", redClass:"btn bg-red"
-          };
-          this.showMessage(data);
-          this.dialogRef.afterClosed().subscribe((result: any) => {
-            if(result == true)
-              this.router.navigate(['/']);
-          });
-          break; 
-         }
-        } 
-      }else{
+          } 
+          return;
+        }
+
         const dialogRef = this.dialog.open(MessagesComponent, {
-              width: '350px',
-              data: {
-                icon: "x-circle",
-                title: "¡Oops, algo salió mal!",
-                text: "Se ha presentado un error al hacer la consulta, por favor intenta nuevamente.",
-                redText: "Continuar", redClass:"btn bg-red"},
-            });
-            dialogRef.afterClosed();
+          width: '350px',
+          data: {
+            icon: "x-circle",
+            title: "¡Oops, algo salió mal!",
+            text: "Se ha presentado un error al hacer la consulta, por favor intenta nuevamente.",
+            redText: "Continuar", redClass:"btn bg-red"},
+        });
+        dialogRef.afterClosed();
+      }, error: () =>{
+        this.loaderService.hide();
+      }, complete: () =>{
+        this.loaderService.hide();
       }
     });
   }

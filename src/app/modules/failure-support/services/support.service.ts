@@ -13,7 +13,8 @@ export class SupportService {
     this.baseUrl = environment.url;
   }
   activate_package(data:any):Observable<any> {
-    const url = this.baseUrl + "paquetes/activar";
+    const url = "http://localhost:3000/paquetes/activar";
+    // const url = this.baseUrl + "paquetes/activar";
     return this.http.post<any>(url, data);
   }
 }

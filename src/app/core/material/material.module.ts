@@ -7,6 +7,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 @NgModule({
   declarations: [],
@@ -20,7 +21,8 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     MatDividerModule,
     MatSelectModule,
     MatIconModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    MatToolbarModule
   ]
 })
 export class MaterialModule { }

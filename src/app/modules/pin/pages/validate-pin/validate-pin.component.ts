@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { MessagesComponent } from 'src/app/core/organisms/messages/messages.component';
 import { PinService } from '../../services/pin.service';
+import { LoadingService } from 'src/app/core/services/loading.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-validate-pin',
@@ -17,31 +18,33 @@ export class ValidatePinComponent implements OnInit {
   constructor(public fb: FormBuilder,
     private router: Router,
     public dialog: MatDialog,
-    private PinService: PinService) {
+    private PinService: PinService,
+    public loaderService: LoadingService) {
     this.pinForm = this.fb.group({
       pin1: ['', [Validators.required]],
       pin2: ['', [Validators.required]],
       pin3: ['', [Validators.required]],
       pin4: ['', [Validators.required]]
       });
+      this.generatePin();
   }
 
-  ngOnInit(): void {
-    this.generatePin(true);
-  }
+  ngOnInit(): void {}
 
-  generatePin(ini:boolean = false){
+  generatePin(){
     const param = {
       "documentClient" : localStorage.getItem('document'),
-      "contactData" : "3134933777", //this.contact.contact,
-      "contactType" : "4"//this.contact.type
+      "contactData" : this.contact.contact,
+      "contactType" : this.contact.type
     };
 
-    this.PinService.generar_pin(param).subscribe((res: { error: number; }) => {
-      if(res.error == 0 && !ini){
-        const data = {icon: "info", text: "Pin Generado satisfactoriamente",
-        redText: "Aceptar", redClass:"btn bg-red"};
-        this.showMessage(data);
+    this.PinService.generar_pin(param).subscribe({
+      next: (res)=> {
+        if(res.error == 0){
+          const data = {icon: "info", text: "Pin Generado satisfactoriamente",
+          redText: "Aceptar", redClass:"btn bg-red"};
+          this.showMessage(data);
+        }
       }
     });
   }

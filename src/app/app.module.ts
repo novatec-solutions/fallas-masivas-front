@@ -10,6 +10,9 @@ import { EncryptHttpInterceptor } from './core/interceptors/encrypt-http.interce
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 
+import { MaterialModule } from './core/material/material.module';
+import { NgxLoadingModule } from "ngx-loading";
+
 @NgModule({
   declarations: [
     AppComponent
@@ -20,6 +23,8 @@ import { environment } from '../environments/environment';
     AppRoutingModule,
     HttpClientModule,
     CoreModule,
+    MaterialModule,
+    NgxLoadingModule.forRoot({}),
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,
       // Register the ServiceWorker as soon as the application is stable

@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { MessagesComponent } from 'src/app/core/organisms/messages/messages.component';
+import { LoadingService } from 'src/app/core/services/loading.service';
 import { SupportService } from '../../services/support.service';
 
 @Component({
@@ -20,7 +21,8 @@ export class ActivatePackageComponent implements OnInit {
   constructor(public fb: FormBuilder,
     public dialog: MatDialog,
     private SupportService: SupportService,
-    private router: Router) {
+    private router: Router,
+    public loaderService: LoadingService) {
     this.validateForm = this.fb.group({
       cellPhone: ['', [Validators.required]],
       terms: [false, Validators.requiredTrue]
@@ -49,44 +51,53 @@ export class ActivatePackageComponent implements OnInit {
   }
 
   confirmNumber(){
+    this.loaderService.show();
     const param = {
-      "account": localStorage.getItem('account'),
+      "account": "001", //localStorage.getItem('account'),
       "msisdn": "3100205613" //this.cellPhone
     };
 
-    this.SupportService.activate_package(param).subscribe( res => {
-      if(res.error == 1){
-        const data = {
-          icon: "info",
-          text: `Ya tienes un paquete de datos activo en esta línea ${this.cellPhone}.`,
-          text2: "Si tienes una duda adicional puedes contactarte con nosotros.",
-          redText: "Soporte asistido WhatsApp", redClass:"btn bg-red",
-          grayText: "Cerrar", grayClass:"btn bg-dark"
-        };
-        this.showMessage(data);
-        this.dialogRef.afterClosed().subscribe((result: any) => {
-          if(result == true)
-            window.location.href='https://wa.me/573117488888?text=Fallas%20Masivas';
-        });
-      }
-      
-      if(res.error == 0){
-        const data = {
-          icon: "info",
-          text: "Recuerda que este paquete de datos no tiene costo y estará activo por las próximas 72 horas, a partir de este momento.",
-          text2: "Te notificaremos al número de contacto del titular cuando el servicio ya se encuentre normalizado.",
-          redText: "Finalizar", redClass:"btn bg-red"
-        };
-        this.showMessage(data);
-        this.dialogRef.afterClosed().subscribe((result: any) => {
-          if(result == true)
-            this.router.navigate(['/']);
-        });
+    this.SupportService.activate_package(param).subscribe({ 
+      next: (res) => {
+        if(res.error == 1){
+          const data = {
+            icon: "info",
+            text: `Ya tienes un paquete de datos activo en esta línea ${this.cellPhone}.`,
+            text2: "Si tienes una duda adicional puedes contactarte con nosotros.",
+            redText: "Soporte asistido WhatsApp", redClass:"btn bg-red",
+            grayText: "Cerrar", grayClass:"btn bg-dark"
+          };
+          this.showMessage(data);
+          this.dialogRef.afterClosed().subscribe((result: any) => {
+            if(result == true)
+              window.location.href='https://wa.me/573117488888?text=Fallas%20Masivas';
+          });
+        }
+        
+        if(res.error == 0){
+          const data = {
+            icon: "info",
+            text: "Recuerda que este paquete de datos no tiene costo y estará activo por las próximas 72 horas, a partir de este momento.",
+            text2: "Te notificaremos al número de contacto del titular cuando el servicio ya se encuentre normalizado.",
+            redText: "Finalizar", redClass:"btn bg-red"
+          };
+          this.showMessage(data);
+          this.dialogRef.afterClosed().subscribe((result: any) => {
+            if(result == true)
+              this.router.navigate(['/']);
+          });
+        }
+      },error: () =>{
+        this.loaderService.hide();
+      },
+      complete: () => {
+        this.loaderService.hide();
       }
     });
   }
 
   showMessage(info: any){
+    this.loaderService.hide();
     this.dialogRef  = this.dialog.open(MessagesComponent, {
       width: '350px',
       data: info

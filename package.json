@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "build-prod": "ng build --base-href /fallas-masivas/",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
@@ -24,6 +25,7 @@
     "@angular/router": "~13.2.0",
     "@angular/service-worker": "~13.2.0",
     "crypto-js": "^4.1.1",
+    "ngx-loading": "^13.0.1",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
