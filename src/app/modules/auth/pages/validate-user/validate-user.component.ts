@@ -6,7 +6,9 @@ import { getValue, TIPOS_DOCUMENTOS } from 'src/app/core/enums/document-type.enu
 import { MessagesComponent } from 'src/app/core/organisms/messages/messages.component';
 import { LoadingService } from 'src/app/core/services/loading.service';
 import { UtilsService } from 'src/app/core/services/utils.service';
+import { AccountContactInfo } from 'src/app/modules/account/interfaces/account-contact.model';
 import { AuthService } from '../../services/auth.service';
+import { AuthFormConfig } from './validate-user.config';
 
 @Component({
   selector: 'app-validate-user',
@@ -16,11 +18,10 @@ import { AuthService } from '../../services/auth.service';
 export class ValidateUserComponent implements OnInit {
   validateForm!: FormGroup;
   title!: string;
-  selectedContact: string | undefined;
-
+  selectedContact: AccountContactInfo | undefined;
+  contactData: Array<AccountContactInfo> = [];
   tiposDocumentosLlave = Object.keys(TIPOS_DOCUMENTOS);
-  contactData: { type: string; contact: string; mask: string; }[] = [];
-  contact: boolean = false;
+  accountErr: boolean = false;                                                       
 
   constructor(public fb: FormBuilder,
     private router: Router,
@@ -35,10 +36,10 @@ export class ValidateUserComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.title = "Selecciona y digita los datos del documento de identidad del titular de la cuenta"
+    this.title = AuthFormConfig.text.validateAccount;
   }
 
-  validateUser(){
+  validateAccount(){
     this.loaderService.show();
     this.contactData = [];
     const form = this.validateForm.value;
@@ -48,35 +49,33 @@ export class ValidateUserComponent implements OnInit {
 
     this.AuthService.validar_cuenta(param).subscribe({
       next: (res)=> {
+        this.loaderService.hide();
         if(res.error > 0){
-          const dialogRef = this.dialog.open(MessagesComponent, {
-            width: '350px',
-            data: { icon: "info", text: res.response.description,
-            grayText: "Cancelar", redText: "Intentar de Nuevo", grayClass:"btn bg-dark", redClass:"btn bg-red"},
-          });
-          dialogRef.afterClosed();
+          this.title = AuthFormConfig.text.validateContact;
+          this.accountErr = true;
         }else{
-          this.loaderService.hide();
           localStorage.setItem('document', `${form.documentType}-${form.documentNumber}`);
-          this.title = "Por tu seguridad, enviaremos un código para validar tu identidad. Confírmanos por cuál medio te gustaría recibirlo:";
-  
+          this.accountErr = false;
+          this.title = AuthFormConfig.text.errorAccount;
+          
           let firstPhone = "";
-          res.response.map((elem: { type: any; contact: any; mask: any; }) => {
+          res.response.map((elem: AccountContactInfo) => {
             if(elem.type == "4" && firstPhone == ""){
               firstPhone = elem.contact;
               localStorage.setItem('firstPhone', firstPhone);
             }
-            let mask = elem.type == "4" ? this.UtilsService.contactMask(elem.contact, 8) : this.UtilsService.contactMask(elem.contact, 3);
+            let mask = this.UtilsService.contactMask(elem.contact);
+            elem.activate = false;
             elem.mask = mask;
             this.contactData.push(elem);
           });
         }
       },error: () =>{
         this.loaderService.hide();
+        this.showMessage(AuthFormConfig.errorGeneral);
       },
       complete: () => {
         this.loaderService.hide();
-        this.contact = this.contactData.length != 0;
       }
     });
   }
@@ -85,11 +84,38 @@ export class ValidateUserComponent implements OnInit {
     return getValue(tipo);
   }
 
+  showMessage(info: any){
+    const dialogRef  = this.dialog.open(MessagesComponent, {
+      width: '350px',
+      data: info
+    });
+    dialogRef.afterClosed();
+  }
+
+  statusUpdate(item: any, event: any){
+    const auxContact: Array<AccountContactInfo> = [];
+    this.contactData.map((elem) => {
+      if(elem === item){
+        elem.activate = event.checked;
+        this.selectedContact = event.checked === true ? elem : undefined;
+      }else{
+        elem.activate = false;
+      }
+      auxContact.push(elem);
+    });
+    this.contactData = auxContact;
+  }
+
   continueToGeneratePin(){
     if( this.selectedContact != undefined ){
       localStorage.setItem('contact', JSON.stringify(this.selectedContact));
-      this.router.navigate(['/pin']);
+      this.router.navigate([ AuthFormConfig.routes.pinGenerate ]);
     }
+  }
 
+  goBack(){
+    this.accountErr = false;
+    this.validateForm.reset({documentType: '', documentNumber: ''});
+    this.title = AuthFormConfig.text.validateAccount;
   }
 }

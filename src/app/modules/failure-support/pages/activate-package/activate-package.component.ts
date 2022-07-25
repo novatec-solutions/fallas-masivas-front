@@ -6,6 +6,7 @@ import { MessagesComponent } from 'src/app/core/organisms/messages/messages.comp
 import { LoadingService } from 'src/app/core/services/loading.service';
 import { environment } from 'src/environments/environment';
 import { SupportService } from '../../services/support.service';
+import { packageFormConfig } from './activate-package.config';
 
 @Component({
   selector: 'app-activate-package',
@@ -40,13 +41,7 @@ export class ActivatePackageComponent implements OnInit {
     this.cellPhone = this.validateForm.value.cellPhone;
     const regex = new RegExp(/^3{1}\d{9}$/);
     if(!regex.test(this.cellPhone)){
-      const data = {
-        icon: "x-circle",
-        title: "¡Oops, algo salió mal!",
-        text: "El número que ingresaste no es válido, revisa que no tenga espacio, ni signos de puntuación e inténtalo de nuevo.",
-        redText: "Intentar nuevamente", redClass:"btn bg-red"
-      };
-      this.showMessage(data);
+      this.showMessage(packageFormConfig.invalidPhone);
       this.dialogRef.afterClosed();
     }else{
       this.access = true;
@@ -57,35 +52,18 @@ export class ActivatePackageComponent implements OnInit {
   confirmNumber(){
     this.loaderService.show();
     const param = {
-      "account": "001", //localStorage.getItem('account'),
-      "msisdn": "3100205613" //this.cellPhone
+      "account": localStorage.getItem('account'),
+      "msisdn": this.cellPhone
     };
 
     this.SupportService.activate_package(param).subscribe({ 
       next: (res) => {
         if(res.error == 1){
-          const data = {
-            icon: "info",
-            text: `Ya tienes un paquete de datos activo en esta línea ${this.cellPhone}.`,
-            text2: "Si tienes una duda adicional puedes contactarte con nosotros.",
-            redText: "Soporte asistido WhatsApp", redClass:"btn bg-red",
-            grayText: "Cerrar", grayClass:"btn bg-dark"
-          };
-          this.showMessage(data);
-          this.dialogRef.afterClosed().subscribe((result: any) => {
-            if(result == true)
-              window.location.href='https://wa.me/573117488888?text=Fallas%20Masivas';
-          });
+          this.pageType = 3;
         }
         
         if(res.error == 0){
-          const data = {
-            icon: "info",
-            text: "Recuerda que este paquete de datos no tiene costo y estará activo por las próximas 72 horas, a partir de este momento.",
-            text2: "Te notificaremos al número de contacto del titular cuando el servicio ya se encuentre normalizado.",
-            redText: "Finalizar", redClass:"btn bg-red"
-          };
-          this.showMessage(data);
+          this.showMessage(packageFormConfig.successActivation);
           this.dialogRef.afterClosed().subscribe((result: any) => {
             if(result == true)
               this.router.navigate(['/']);
@@ -93,6 +71,8 @@ export class ActivatePackageComponent implements OnInit {
         }
       },error: () =>{
         this.loaderService.hide();
+        this.showMessage(packageFormConfig.errorGeneral);
+        this.dialogRef.afterClosed();
       },
       complete: () => {
         this.loaderService.hide();
@@ -106,6 +86,14 @@ export class ActivatePackageComponent implements OnInit {
       width: '350px',
       data: info
     });
+  }
+
+  goSupport(){
+    window.location.href= packageFormConfig.routes.assistedSupport;
+  }
+
+  goBack(){
+    this.router.navigate(['/']);
   }
 
   

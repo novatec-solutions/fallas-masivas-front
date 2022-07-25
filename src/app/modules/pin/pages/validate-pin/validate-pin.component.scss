@@ -1,40 +1,10 @@
 @import "../../../../../assets/theme/variables.scss";
-.red-box {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  padding-bottom: 24px;
-  border-bottom: 1px solid #707070;
-  .red-label {
-    color: $red;
-    font-size: 19px;
-    font-weight: 500;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 95%;
-  }
-  img {
-    height: 27px;
-    padding-right: 10px;
-  }
-}
-
-.content {
-  .pin-text {
-    font-size: 20px;
-    font-weight: 500;
-    color: $black;
+.card {
+  .box {
     text-align: center;
-    margin-bottom: 30px;
-    text-align: center;
-  }
-  .input-box {
-    text-align: center;
-    margin: 38px 0px;
     input {
-      border: 1px solid #cbcbcb;
-      border-radius: 4px;
+      border: none;
+      border-bottom: 1px solid #464646;
       width: 14%;
       font-weight: 500;
       color: $black;
@@ -44,34 +14,13 @@
       padding: 8px 0;
     }
   }
-  .text {
+  .footer{
     text-align: center;
-    font-size: 13px;
-    color: $black-text;
-  }
-  .red-text {
-    text-align: center;
-    font-size: 13px;
-    color: $red;
-    text-decoration: underline;
-    font-weight: 500;
-    .content-icon {
-      background: $red;
-      width: 15px;
-      height: 15px;
-      border-radius: 50px;
-      display: inline-block;
-      margin-left: 5px;
-      vertical-align: middle;
-      .mat-icon {
-        height: 16px;
-        width: 16px;
-      }
-      .icon-chevron {
-        color: $white;
-        font-size: 15px;
-        text-align: center;
-      }
+    .text {
+      font-size: 16px;
+      color: $black-text;
+      margin: 0 25px 20px;
+      text-align: center;
     }
   }
 }

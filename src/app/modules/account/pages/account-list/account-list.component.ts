@@ -4,7 +4,9 @@ import { Router } from '@angular/router';
 import { getValue } from 'src/app/core/enums/document-type.enum';
 import { MessagesComponent } from 'src/app/core/organisms/messages/messages.component';
 import { LoadingService } from 'src/app/core/services/loading.service';
+import { TypeList } from '../../enums/contact-type.enum';
 import { AccountService } from '../../services/account.service';
+import { accountFormConfig } from './account-list.config';
 
 @Component({
   selector: 'app-account-list',
@@ -15,33 +17,49 @@ export class AccountListComponent implements OnInit {
   selectedAddress!: {cuenta: string, direccion: string};
   selectedEquipment!: {serial: string, technology: string, typeService: string};
   dataSource: any = [];
-  addressList: boolean = true;
   title!: string;
   dialogRef: any;
   documentType!: string;
   documentNum!: string;
+  displayedColumns: string[] = ['slider', 'account', 'address'];
+  checkList: string = 'address';
+  msgEquipment: string | undefined;
+  typeFailure: any | undefined;
 
   constructor(private AccountService: AccountService,
     public dialog: MatDialog,
     private router: Router,
-    public loaderService: LoadingService) { }
+    public loaderService: LoadingService) { 
+      [this.documentType, this.documentNum] = localStorage.getItem('document')?.split("-") || [];
+      this.checkAddressList();
+    }
 
-  ngOnInit(): void {
-    [this.documentType, this.documentNum] = localStorage.getItem('document')?.split("-") || [];
-    this.checkAddressList();
-  }
+  ngOnInit(): void {}
 
   checkAddressList(){
-    this.title = "Selecciona la dirección en la cual presentas la falla en tus servicios:";
+    this.loaderService.show();
+    this.title = accountFormConfig.text.addressList;
+    this.checkList = 'address';
 
     const param = {
       "documentNumber": this.documentNum,
       "documentType": getValue(this.documentType).id
     };
 
-    this.AccountService.get_address_list(param).subscribe( res => {
-      this.dataSource = res.response;
+    this.AccountService.get_address_list(param).subscribe({
+      next: (res) => {
+        this.dataSource = res.response;
+      }, error: () =>{
+        this.loaderService.hide();
+        this.showMessage(accountFormConfig.errorGeneral);
+      }, complete: () =>{
+        this.loaderService.hide();
+      }
     });
+  }
+
+  addressMask(address: string) {
+    return address.substring(0,7) + "*".repeat(3);
   }
 
   checkEquipmentList(){
@@ -54,7 +72,7 @@ export class AccountListComponent implements OnInit {
       "accountCode": this.documentType+""+this.documentNum
     };
 
-    this.AccountService.operation_record(param).subscribe( res => {});
+    this.AccountService.operation_record(param).subscribe();
 
     const data = {
       "account": this.selectedAddress.cuenta,
@@ -67,59 +85,63 @@ export class AccountListComponent implements OnInit {
     this.AccountService.get_equipment_list(data).subscribe({
       next: (res) => {
         if(res.response && res.response?.length == 0){
-          const dialogRef = this.dialog.open(MessagesComponent, {
-            width: '350px',
-            data: {
-              icon: "info",
-              text: res.response.description,
-              grayText: "Finalizar", redText: "Soporte asistido WhatsApp", grayClass:"btn bg-dark", redClass:"btn bg-red"},
-          });
-          dialogRef.afterClosed().subscribe((result: any) => {
-            if(result == true)
-              window.location.href='https://wa.me/573117488888?text=Fallas%20Masivas';
-          });
+          this.checkList = 'equipment';
+          this.msgEquipment = accountFormConfig.text.noEquipment;
         }else{
-          this.addressList = false;
-          this.title = "Selecciona el equipo que no está funcionando correctamente. Si son varios equipos selecciona el módem de internet";
+          this.title = accountFormConfig.text.equipmentList;
           this.dataSource = res.response;
           localStorage.setItem('account', this.selectedAddress.cuenta);
         }
       }, error: () =>{
         this.loaderService.hide();
+        this.showMessage(accountFormConfig.errorGeneral);
       }, complete: () =>{
+        this.checkList = 'equipment'; 
         this.loaderService.hide();
       }
     });
   }
 
-  seeInformation(){
-    const data = {
-      icon: "info",
-      title: "Información del cable módem",
-      text: "Recuerda que en la parte posterior de tu módem encuentras",
-      redLabel:"la marca, el modelo y el serial", img: "modem.png"
-    };
-    this.showMessage(data);
+  statusUpdate(item: any, event: any){
+    const auxAddress: any[] = [];
+    this.dataSource.map((elem: any) => {
+      if(elem === item){
+        elem.activate = event.checked;
+        if(this.checkList == TypeList.ADDRESS){
+          this.selectedAddress = event.checked === true ? elem : undefined;
+        }else{
+          this.selectedEquipment = event.checked === true ? elem : undefined;
+        }
+        
+      }else{
+        elem.activate = false;
+      }
+      auxAddress.push(elem);
+    });
+    this.dataSource = auxAddress;
   }
 
-  checkEquipment(){
+  goSupport(){
+    window.location.href= accountFormConfig.routes.assistedSupport;
+  }
+
+  seeInformation(){
+    this.showMessage(accountFormConfig.infoModem);
+  }
+
+  goPackageSupport(){
+    this.router.navigate([accountFormConfig.routes.packageSupport]);
+  }
+
+  diagnoseEquipment(){
     this.loaderService.show();
     const data = { 
       "msisdn": 626,
       "isInspira": false,
       "documentType": this.documentType,
-      // "documentId": this.documentNum,
-      // "account": this.selectedAddress.cuenta,
+      "documentId": this.documentNum,
+      "account": parseInt(this.selectedAddress.cuenta),
       "service": [ this.selectedEquipment ],
-      
-      // "account": 8515291, //Mora
-      // "documentId": "1031141581",
-
-      "account": 17090382, //Mantenimiento masivo - radicado
-      "documentId": "52953444",
-
-      // "account": 17513584, //Mantenimiento especifico
-      // "documentId": "1031141555",
     };
 
     this.AccountService.diagnose_equipment_failure(data).subscribe({ 
@@ -127,64 +149,36 @@ export class AccountListComponent implements OnInit {
         if(res.error === 0){
           switch(res.response.typeFailure) { 
             case '1': { 
-              this.router.navigate(['/soporte']);
+              this.router.navigate([accountFormConfig.routes.goPay]);
               break; 
             } 
             case '2': { 
-              const data = {
-                icon: "info",
-                text: "Nuestro equipo técnico está trabajando para solucionar las fallas presentadas en tu zona.",
-                text2: "Una vez hayamos restablecido los servicios, notificaremos por medios de un mensaje de texto al número de celular del titular.",
-                boldText: `Radicado: ${res.response.caseNumber}`,
-                redText: "Continuar", redClass:"btn bg-red"
+              this.checkList = 'failure';
+              this.typeFailure = {
+                text1: accountFormConfig.radicado.text1,
+                text2: accountFormConfig.radicado.text2,
+                boldText: `Radicado: ${res.response.caseNumber}`
               };
-              this.showMessage(data);
-              this.dialogRef.afterClosed().subscribe((result: any) => {
-                if(result == true)
-                  this.router.navigate(['/soporte/paquete']);
-              });
               break; 
             }
             case '3': { 
-              const data = {
-                icon: "info",
-                text: "Actualmente nuestros técnicos se encuentran realizando trabajos de mantenimiento en tu zona. Esperamos restablecer tus servicios lo antes posible.",
-                redText: "Continuar", redClass:"btn bg-red"
-              };
-              this.showMessage(data);
+              this.checkList = 'failure';
+              this.typeFailure = accountFormConfig.specificFailure;
+              break; 
+            } default: {
+              this.showMessage(accountFormConfig.generalFailure);
               this.dialogRef.afterClosed().subscribe((result: any) => {
                 if(result == true)
-                  this.router.navigate(['/soporte/paquete']);
+                  this.router.navigate([accountFormConfig.routes.goAccountList]);
               });
               break; 
-          } default: {
-            const data = {
-              icon: "info",
-              text: "No se encontraron fallas",
-              redText: "Finalizar", redClass:"btn bg-red"
-            };
-            this.showMessage(data);
-            this.dialogRef.afterClosed().subscribe((result: any) => {
-              if(result == true)
-                this.router.navigate(['/']);
-            });
-            break; 
-          }
+            }
           } 
           return;
         }
-
-        const dialogRef = this.dialog.open(MessagesComponent, {
-          width: '350px',
-          data: {
-            icon: "x-circle",
-            title: "¡Oops, algo salió mal!",
-            text: "Se ha presentado un error al hacer la consulta, por favor intenta nuevamente.",
-            redText: "Continuar", redClass:"btn bg-red"},
-        });
-        dialogRef.afterClosed();
       }, error: () =>{
         this.loaderService.hide();
+        this.showMessage(accountFormConfig.errorGeneral);
       }, complete: () =>{
         this.loaderService.hide();
       }
@@ -196,6 +190,7 @@ export class AccountListComponent implements OnInit {
       width: '350px',
       data: info
     });
+    this.dialogRef.afterClosed();
   }
 
 }

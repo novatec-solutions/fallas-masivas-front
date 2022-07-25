@@ -1,34 +1,46 @@
 <div class="container">
-  <div class="text-box">
-    <p>{{title}}</p>
-  </div>
-  <form [formGroup]="validateForm" (ngSubmit)="validateUser()" novalidate *ngIf="!contact" class="content">
-    <label class="field">Tipo de documento</label>
-    <mat-select formControlName="documentType" class="mb40">
-      <mat-option value=""> Selecciona </mat-option>
-      <mat-option *ngFor="let tipo of tiposDocumentosLlave" value="{{getValue(tipo).code}}">
-        {{getValue(tipo).label}}
-      </mat-option>
-    </mat-select>
-
-    <label class="field">Número de documento</label>
-    <input matInput type="number" formControlName="documentNumber"/>
-
-    <div class="btn-box mt50">
-      <app-button class="app-button" buttonClass="{{validateForm.invalid?'btn bg-light-gray':'btn bg-red'}}" buttonDisabled="{{validateForm.invalid}}">Continuar</app-button>
-      <app-button class="app-button" buttonClass="btn bg-gray" buttonDisabled="false">Cancelar</app-button>
+  <mat-card class="card">
+    <div class="card__title">
+      <p>{{title}}</p>
     </div>
-  </form>
+    <form [formGroup]="validateForm" novalidate *ngIf="!accountErr && !contactData.length">
+      <div class="flex-input">
+        <label class="field">Tipo de documento</label>
+        <mat-select formControlName="documentType" class="mb20">
+          <mat-option value=""> Selecciona </mat-option>
+          <mat-option *ngFor="let tipo of tiposDocumentosLlave" value="{{getValue(tipo).code}}">
+            {{getValue(tipo).label}}
+          </mat-option>
+        </mat-select>
+      </div>
+  
+      <div class="flex-input">
+        <label class="field">Número de documento</label>
+        <input matInput type="number" formControlName="documentNumber"/>
+      </div>
+  
+      <div class="card__actions">
+        <app-button class="app-button" (click)="goBack()" buttonClass="btn bg-gray">Cancelar</app-button>
+        <app-button class="app-button" (click)="validateAccount()" buttonClass="{{validateForm.invalid?'btn bg-light-gray':'btn bg-red'}}" buttonDisabled="{{validateForm.invalid}}">Continuar</app-button>
+      </div>
+    </form>
 
-  <div *ngIf="contact" class="content">
-    <mat-radio-group class="radio-group" [(ngModel)]="selectedContact">
-      <mat-radio-button class="radio-button" *ngFor="let data of contactData" [value]="data">
-        <img src="assets/images/{{data.type=='1'?'mail.svg':'tablet.svg'}}" />
-        <p>{{data.mask}}</p>
-      </mat-radio-button>
-    </mat-radio-group>
-    <div class="mt50">
-      <app-button class="app-button" (click)="continueToGeneratePin()" class="app-button" buttonClass="{{selectedContact==undefined?'btn bg-light-gray':'btn bg-red'}}" buttonDisabled="{{selectedContact!=undefined?'false':'true'}}">Enviar</app-button>
+    <div class="card__actions" *ngIf="accountErr && !contactData.length">
+      <app-button class="app-button" (click)="goBack()" buttonClass="btn bg-gray">Cancelar</app-button>
+      <app-button class="app-button" (click)="goBack()" buttonClass="btn bg-red">Intenta de Nuevo</app-button>
+    </div> 
+  
+    <div *ngIf="contactData.length != 0" class="mx25">
+      <mat-list>
+        <mat-list-item *ngFor="let data of contactData">
+          <mat-slide-toggle [checked]="data.activate" (change)="statusUpdate(data, $event)">
+            <p class="text-toggle">{{data.mask}}</p>
+          </mat-slide-toggle>
+        </mat-list-item>
+      </mat-list>
+      <div class="card__actions">
+        <app-button class="app-button" (click)="continueToGeneratePin()" class="app-button" buttonClass="{{selectedContact==undefined?'btn bg-light-gray':'btn bg-red'}}" buttonDisabled="{{selectedContact!=undefined?'false':'true'}}">Enviar</app-button>
+      </div>
     </div>
-  </div>
+  </mat-card>
 </div>

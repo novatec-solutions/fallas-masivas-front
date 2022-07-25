@@ -7,7 +7,8 @@ export class UtilsService {
 
   constructor() { }
 
-  contactMask (data: string, num: number) {
-    return "*".repeat(num) + data.substring(num,data.length);
+  contactMask (data: string) {
+    const substring = data.substring(6,data.length);
+    return data.substring(0,6) + "*".repeat(substring.length);
   }
 }

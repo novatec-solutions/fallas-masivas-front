@@ -4,11 +4,11 @@
   border-radius: 26px;
   color: $white;
   border: none;
-  font-size: 13px;
+  font-size: 14px;
   cursor: pointer;
   outline: none;
-  padding: 13px 20px;
-  width: 100%;
+  padding: 12px 35px;
+  margin: 0 6px;
 }
 
 .bg-red {
@@ -16,7 +16,7 @@
 }
 
 .bg-gray {
-  background: $dark-gray;
+  background: $gray;
 }
 
 .bg-light-gray {

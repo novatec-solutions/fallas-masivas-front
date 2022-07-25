@@ -3,19 +3,20 @@ form{
   display: flex;
   flex-direction: column;
   align-items: center;
-  p{
-    margin-bottom: 22px;
-    color: #464646;
-    font-size: 16px;
-  }
-  .info-group{
+  width: 70%;
+
+  .actions-col{
+    margin-top: 60px;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
-    p{
-      margin-bottom: 0;
-      padding-left: 18px;
-    }
+  }
+
+  p{
+    font-size: 16px;
+    color: $black-text;
+    margin-bottom: 20px;
+    text-align: center;
   }
   input{
     background: $white;
@@ -26,7 +27,7 @@ form{
     border: 1px solid #cbcbcb;
     border-radius: 4px;
     color: $dark-gray;
-    width: 100%;
+    width: 90%;
     text-align: center;
   }
   .toggle{
@@ -50,12 +51,16 @@ form{
       }
     
       span.mat-slide-toggle-bar {
-        height: 23px;
-        border-radius: 12px;
-        .mat-slide-toggle-thumb-container {
-          top: 2px !important;
-          left: 1px !important;
-        }
+        width: 40px;
+        height: 24px;
+        border-radius: 11px;
+      }
+    
+      .mat-slide-toggle-thumb {
+        height: 20px;
+        width: 20px;
+        margin-top: 5px;
+        margin-left: 2px;
       }
     }
   }
@@ -78,6 +83,10 @@ form{
     color: $red;
     font-size: 27px;
   }
+}
+
+.container .card {
+  width: auto !important;
 }
 
 

@@ -5,6 +5,7 @@ import { MessagesComponent } from 'src/app/core/organisms/messages/messages.comp
 import { PinService } from '../../services/pin.service';
 import { LoadingService } from 'src/app/core/services/loading.service';
 import { Router } from '@angular/router';
+import { PinFormConfig } from './validate-pin.config';
 
 @Component({
   selector: 'app-validate-pin',
@@ -14,6 +15,8 @@ import { Router } from '@angular/router';
 export class ValidatePinComponent implements OnInit {
   pinForm!: FormGroup;
   contact = JSON.parse(localStorage.getItem('contact') as any);
+  title!: string;
+  redBtnText: string | undefined;
 
   constructor(public fb: FormBuilder,
     private router: Router,
@@ -29,7 +32,9 @@ export class ValidatePinComponent implements OnInit {
       this.generatePin();
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.title = PinFormConfig.text.validatePin;
+  }
 
   generatePin(){
     const param = {
@@ -41,8 +46,8 @@ export class ValidatePinComponent implements OnInit {
     this.PinService.generar_pin(param).subscribe({
       next: (res)=> {
         if(res.error == 0){
-          const data = {icon: "info", text: "Pin Generado satisfactoriamente",
-          redText: "Aceptar", redClass:"btn bg-red"};
+          const data = {icon: "info", text: PinFormConfig.text.successPin,
+          redText: "Aceptar"};
           this.showMessage(data);
         }
       }
@@ -50,6 +55,7 @@ export class ValidatePinComponent implements OnInit {
   }
 
   validatePin(){
+    this.redBtnText = undefined;
     const form = this.pinForm.value;
     const pinNumber = `${form.pin1}${form.pin2}${form.pin3}${form.pin4}`;
 
@@ -59,13 +65,18 @@ export class ValidatePinComponent implements OnInit {
     };
 
     this.PinService.validar_pin(param).subscribe((res: { error: number; response: { description: any; }; }) => {
-      if(res.error > 0){
-        const data = {icon: "info", text: res.response.description,
-          grayText: "Finalizar", redText: "Atras", grayClass:"btn bg-dark", redClass:"btn bg-red"};
-        this.showMessage(data);
-      }else{
-        this.router.navigate(['/cuenta']);
+      if(res.error === 0){
+        this.router.navigate([PinFormConfig.routes.accountAddress]);
+        return
       }
+
+      if( res.response.description == PinFormConfig.errTypes.maxTime){
+        this.title = PinFormConfig.text.errorMaxTime;
+        this.redBtnText = PinFormConfig.btnText.requestCode;
+      }else{
+        this.title = PinFormConfig.text.errorPin;
+        this.redBtnText = PinFormConfig.btnText.back;
+      }      
     });
   }
 
@@ -75,5 +86,15 @@ export class ValidatePinComponent implements OnInit {
       data: info
     });
     dialogRef.afterClosed();
+  }
+
+  btnAction(){
+    if(this.redBtnText == PinFormConfig.btnText.requestCode){
+      this.generatePin();
+    }
+    this.title = PinFormConfig.text.validatePin;
+    this.pinForm.reset({pin1:'', pin2:'', pin3:'', pin4:''});
+    this.redBtnText = undefined;
+
   }
 }

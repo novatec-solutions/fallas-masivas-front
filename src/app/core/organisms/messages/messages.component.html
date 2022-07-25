@@ -1,18 +1,14 @@
 <mat-dialog-content>
-  <div class="content-icon"><mat-icon matSuffix class="icon-close" [mat-dialog-close]="null">close</mat-icon></div>
   <div class="content">
     <img class="icon" *ngIf="data.icon" src="assets/images/{{data.icon}}.svg">
     <p *ngIf="data.title" class="title">{{data.title}}</p>
-    <p *ngIf="data.boldTextHeader" class="text-center"><b>{{data.boldTextHeader}}</b></p>
-    <p *ngIf="data.boldTextRed" class="text-center boldTextRed"><b>{{data.boldTextRed}}</b></p>
-    <p class="text">{{data.text}} <span *ngIf="data.redLabel" class="red-text">{{data.redLabel}}</span></p>
+    <p class="text">{{data.text}} <span *ngIf="data.redLabel" class="red-text">{{data.redLabel}}</span> <span *ngIf="data.nextText" class="text"> {{data.nextText}}</span></p>
     <p class="text" *ngIf="data.text2">{{data.text2}}</p>
     <p *ngIf="data.boldText"><b>{{data.boldText}}</b></p>
     <img *ngIf="data.img" src="assets/images/{{data.img}}" />
   </div>
 
 </mat-dialog-content>
-<div mat-dialog-actions class="btn-box">
-  <app-button *ngIf="data.redText" [mat-dialog-close]="true" class="app-button" buttonClass="{{data.redClass}}">{{data.redText}}</app-button>
-  <app-button *ngIf="data.grayText" [mat-dialog-close]="null" class="app-button" buttonClass="{{data.grayClass}}">{{data.grayText}}</app-button>
+<div class="dialog-actions">
+  <button [mat-dialog-close]="true">{{data.redText}}</button>
 </div>

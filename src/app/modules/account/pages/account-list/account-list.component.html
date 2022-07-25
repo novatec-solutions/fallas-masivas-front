@@ -1,47 +1,89 @@
-<div class="container">
-  <div class="text-box">
-    <p>{{title}}</p>
-  </div>
-  <div class="content">
-    <ng-container *ngIf="addressList else equipmentList" >
-      <div *ngIf="dataSource?.length==0" class="info">
-        <img src="assets/images/info.svg">
-        <label>No tiene cuentas asociadas </label>
+
+  <ng-container *ngIf="checkList == 'address' else equipmentList" >
+    <div class="container">
+      <mat-card class="card">
+        <div class="card__title">
+          <p>{{title}}</p>
+        </div>
+        <div *ngIf="!dataSource?.length" class="info">
+          <p>No encontramos direcciones asociadas a tu cuenta hogar</p>
+        </div>
+        <div class="content-table" *ngIf="dataSource?.length">
+          <table mat-table [dataSource]="dataSource">
+            <ng-container matColumnDef="slider">
+              <th mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell *matCellDef="let element">
+                <mat-slide-toggle [checked]="element.activate" (change)="statusUpdate(element, $event)"></mat-slide-toggle>
+              </td>
+            </ng-container>
+          
+            <ng-container matColumnDef="account">
+              <th mat-header-cell *matHeaderCellDef> Cuenta </th>
+              <td mat-cell *matCellDef="let element"> {{element.cuenta}} </td>
+            </ng-container>
+    
+            <ng-container matColumnDef="address">
+              <th mat-header-cell *matHeaderCellDef> Dirección </th>
+              <td mat-cell *matCellDef="let element"> {{addressMask(element.direccion)}} </td>
+            </ng-container>
+          
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+        </div>
+        <div class="card__actions">
+          <app-button class="app-button" routerLink="/" buttonClass="btn bg-gray" buttonDisabled="false">Cancelar</app-button>
+          <app-button class="app-button" (click)="checkEquipmentList()" buttonClass="{{selectedAddress==undefined?'btn bg-light-gray':'btn bg-red'}}" buttonDisabled="{{selectedAddress!=undefined?'false':'true'}}">Continuar</app-button>
+        </div>
+      </mat-card>
+    </div>
+  </ng-container>
+  <ng-template #equipmentList>
+    <ng-container *ngIf="checkList == 'equipment' else failure" >
+      <div class="red-header">
+        <p>{{title}}</p>
       </div>
-      <mat-radio-group class="radio-group" [(ngModel)]="selectedAddress" name="selectedAddress">
-        <mat-radio-button class="radio-button" *ngFor="let data of dataSource" [value]="data">
-          <img src="assets/images/home.svg">
-          <div class="labels">
-            <p>Cuenta: {{data.cuenta}}</p>
-            <p class="bold-text">{{data.direccion}}</p>
-          </div>
-        </mat-radio-button>
-      </mat-radio-group>
-      <div class="btn-box mt30">
-        <app-button class="app-button" (click)="checkEquipmentList()" buttonClass="{{selectedAddress==undefined?'btn bg-light-gray':'btn bg-red'}}" buttonDisabled="{{selectedAddress!=undefined?'false':'true'}}">Continuar</app-button>
+      <div class="info" *ngIf="msgEquipment">
+        <p>{{msgEquipment}}</p>
+        <div class="box-actions-col">
+          <app-button class="app-button mb20" (click)="goSupport()" buttonClass="btn bg-red">Soporte asistido WhatsApp</app-button>
+          <app-button class="app-button" routerLink="/" buttonClass="btn bg-gray" buttonDisabled="false">Finalizar</app-button>
+        </div>
+      </div>
+      <mat-list *ngIf="!msgEquipment">
+        <mat-list-item *ngFor="let data of dataSource">
+          <mat-card>
+            <mat-slide-toggle class="items-group" [checked]="data.activate" (change)="statusUpdate(data, $event)">
+              <div class="items">
+                <p><b>{{data.typeService}}</b></p>
+                <p>{{data.typeService == "Television" ? 'Decodificador ' : 'Módem ' }} {{data.technology}}</p>
+                <p>{{data.serial}}</p>
+                <p class="blue-text">Cómo identificar el serial, <span class="blue-link" (click)="seeInformation()">Clic Aquí</span></p>
+              </div>
+            </mat-slide-toggle>
+          </mat-card>
+        </mat-list-item>
+      </mat-list>
+      <div class="box-actions">
         <app-button class="app-button" routerLink="/" buttonClass="btn bg-gray" buttonDisabled="false">Cancelar</app-button>
+        <app-button class="app-button" (click)="diagnoseEquipment()" buttonClass="{{selectedEquipment==undefined?'btn bg-light-gray':'btn bg-red'}}" buttonDisabled="{{selectedEquipment!=undefined?'false':'true'}}">Continuar</app-button>
       </div>
     </ng-container>
-    <ng-template #equipmentList>
-      <div *ngIf="dataSource?.length==0" class="info">
-        <img src="assets/images/info.svg">
-        <label>No tiene equipos asociados</label>
-      </div>
-      <mat-radio-group class="radio-group" [(ngModel)]="selectedEquipment" name="selectedEquipment">
-        <mat-radio-button class="radio-button" *ngFor="let data of dataSource" [value]="data">
-          <div class="labels">
-            <p><b>{{data.typeService}}</b></p>
-            <p class="gray-text">{{data.typeService == "Television" ? 'Decodificador ' : 'Módem ' }} {{data.technology}}</p>
-            <p class="gray-text">{{data.serial}}</p>
-            <p class="blue-text">Cómo identificar el serial, <span class="blue-link" (click)="seeInformation()">Clic Aquí</span></p>
+    <ng-template #failure>
+      <div class="container" *ngIf="typeFailure">
+        <mat-card class="card">
+          <div class="card__title">
+            <p *ngIf="typeFailure.text">{{typeFailure.text}}</p>
+            <div *ngIf="typeFailure.text1" class="box-text">
+              <p>{{typeFailure.text1}}</p>
+              <p>{{typeFailure.text2}}</p>
+              <p><b>{{typeFailure.boldText}}</b></p>
+            </div>
           </div>
-        </mat-radio-button>
-      </mat-radio-group>
-      <div class="btn-box mt30">
-        <app-button class="app-button" (click)="checkEquipment()" buttonClass="{{selectedEquipment==undefined?'btn bg-light-gray':'btn bg-red'}}" buttonDisabled="{{selectedEquipment!=undefined?'false':'true'}}">Continuar</app-button>
-        <app-button class="app-button" routerLink="/" buttonClass="btn bg-gray" buttonDisabled="false">Cancelar</app-button>
+          <div class="card__actions">
+            <app-button class="app-button" (click)="goPackageSupport()" buttonClass="btn bg-red">Continuar</app-button>
+          </div>
+        </mat-card>
       </div>
     </ng-template>
-
-  </div>
-</div>
+  </ng-template>

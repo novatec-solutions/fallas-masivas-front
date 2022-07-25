@@ -1,42 +1,55 @@
 <div class="container">
   <ng-container *ngIf="!access; else nextPage" >
-    <form [formGroup]="validateForm" (ngSubmit)="activateDataPackage()" novalidate class="content">
-      <img class="icon mb22" src="assets/images/user-check.svg">
-      <p class="text-center"><b>¡Discúlpanos!</b></p>
-      <p class="text-center"><b>Hemos identificado una falla masiva en tu servicio, nuestros técnicos ya están trabajando para solucionarla lo más pronto posible.</b></p>
-      <p class="text-center">Para que sigas navegando, te damos un paquete ilimitado de datos que puedes activar en tu línea móvil Claro y usarlo durante las próximas 72 horas.</p>
+    <form [formGroup]="validateForm" (ngSubmit)="activateDataPackage()" novalidate>
+      <img class="icon mb20" src="assets/images/asesor.png">
+      <p><b>¡Discúlpanos!</b></p>
+      <p><b>Hemos identificado una falla masiva en tu servicio, nuestros técnicos ya están trabajando para solucionarla lo más pronto posible.</b></p>
+      <p>Para que sigas navegando, te damos un paquete ilimitado de datos que puedes activar en tu línea móvil Claro y usarlo durante las próximas 72 horas.</p>
       <input matInput type="number" placeholder="Digita la línea Claro" formControlName="cellPhone"/>
-      <div class="btn-box mt50">
-        <app-button class="app-button" buttonClass="{{validateForm.invalid?'btn bg-light-gray':'btn bg-red'}}" buttonDisabled="{{validateForm.invalid}}">Activar paquetes de datos</app-button>
-        <app-button class="app-button" buttonClass="btn bg-gray" buttonDisabled="false" (click)="noClaroLine()">No tengo línea Claro</app-button>
+      <div class="actions-col">
+        <app-button class="app-button mb20" buttonClass="{{validateForm.invalid?'btn bg-light-gray':'btn bg-red'}}" buttonDisabled="{{validateForm.invalid}}">Activar paquetes de datos</app-button>
+        <app-button class="app-button" buttonClass="btn bg-red" buttonDisabled="false" (click)="noClaroLine()">No tengo línea Claro</app-button>
       </div>
       <div class="toggle">
         <mat-slide-toggle formControlName="terms">
           <a class="blue-text" [href]="assetsTyCPath" target="_blank">Términos y condiciones</a>
         </mat-slide-toggle>
       </div>
-      
     </form>
   </ng-container>
   <ng-template #nextPage>
     <div class="content info-content">
-      <ng-container *ngIf="pageType==2; else confirmPackage" > 
+      <ng-container *ngIf="pageType==2; else alreadyActive" > 
         <p>Lamentamos que no tengas una línea claro para activar este beneficio.</p>
         <p>Estamos trabajando para solucionar lo más pronto posible.</p>
-        <div class="btn-box mt50">
+        <div class="mt50">
           <app-button class="app-button" routerLink="/" buttonClass="btn bg-red" buttonDisabled="false">Finalizar</app-button>
         </div>
       </ng-container>
 
-      <ng-template #confirmPackage>
+      <ng-template #alreadyActive>
+        <ng-container *ngIf="pageType==3; else confirmPackage" > 
+          <mat-card class="card">
+            <div class="card__title">
+              <p><b>tienes un paquete de datos activo en esta línea {{cellPhone}}.</b></p>
+              <p><b>Si tienes una duda adicional puedes contactarte con nosotros.</b></p>
+            </div>
+            <div class="card__actions-col">
+              <app-button class="app-button mb20" (click)="goSupport()" buttonClass="btn bg-red">Soporte asistido WhatsApp</app-button>
+              <app-button class="app-button" (click)="goBack()" buttonClass="btn bg-gray">Cerrar</app-button>
+            </div>
+          </mat-card>
+        </ng-container>
+        <ng-template #confirmPackage>
           <p class="bold-info"><b>¡Disfruta un paquete de datos ilimitado Claro sin costo!</b></p>
           <p>Mientras solucionamos las fallas de tus servicios hogar, vamos a activar un paquete de datos ilimitado a tu línea móvil Claro.</p>
           <p>Por favor, valida si el número digitado es correcto:</p>
           <p class="red-text"><b>{{cellPhone}}</b></p>
-          <div class="btn-box mt50">
-            <app-button class="app-button" (click)="confirmNumber()" buttonClass="btn bg-red" buttonDisabled="false">Confirmar</app-button>
+          <div class="mt50">
             <app-button class="app-button" (click)="access=false" buttonClass="btn bg-gray" buttonDisabled="false">Ajustar</app-button>
+            <app-button class="app-button" (click)="confirmNumber()" buttonClass="btn bg-red" buttonDisabled="false">Confirmar</app-button>
           </div>
+        </ng-template>
       </ng-template>
     </div>
   </ng-template>
