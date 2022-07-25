@@ -11,13 +11,13 @@ export const accountFormConfig = Object.freeze({
         goAccountList: '/cuenta'
     },
     errorGeneral: {
-        icon: "x-circle",
+        icon: "error.png",
         title: "¡Oops, algo salió mal!",
         text: "Se ha presentado un error al hacer la consulta, por favor intenta nuevamente.",
         redText: "Intentar nuevamente"
     },
     infoModem: {
-        icon: "info",
+        icon: "info.svg",
         title: "Información del cable módem",
         text: "Recuerda que en la parte posterior del dispositivo encuentras",
         redLabel:"la marca, modelo y serial", 

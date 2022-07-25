@@ -46,7 +46,7 @@ export class ValidatePinComponent implements OnInit {
     this.PinService.generar_pin(param).subscribe({
       next: (res)=> {
         if(res.error == 0){
-          const data = {icon: "info", text: PinFormConfig.text.successPin,
+          const data = {icon: "check.png", text: PinFormConfig.text.successPin,
           redText: "Aceptar"};
           this.showMessage(data);
         }

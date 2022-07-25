@@ -8,7 +8,7 @@ export const AuthFormConfig = Object.freeze({
     pinGenerate: '/pin',
   },
   errorGeneral: {
-    icon: "x-circle",
+    icon: "error.png",
     title: "¡Oops, algo salió mal!",
     text: "Se ha presentado un error al hacer la consulta, por favor intenta nuevamente.",
     redText: "Intentar nuevamente"

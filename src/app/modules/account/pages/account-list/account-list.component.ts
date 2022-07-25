@@ -89,7 +89,10 @@ export class AccountListComponent implements OnInit {
           this.msgEquipment = accountFormConfig.text.noEquipment;
         }else{
           this.title = accountFormConfig.text.equipmentList;
-          this.dataSource = res.response;
+          const dataSourceAux = res.response.filter(function(item: { typeService: string; }) {
+            return item.typeService !== 'Telefonia';
+          });
+          this.dataSource = dataSourceAux;
           localStorage.setItem('account', this.selectedAddress.cuenta);
         }
       }, error: () =>{
